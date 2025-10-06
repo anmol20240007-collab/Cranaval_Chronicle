@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Register - The Caravan Chronicle</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root{
+            --primary:#8B4513; --secondary:#D2691E; --accent:#FFD700; --dark:#3E2723; --danger:#F44336; --transition: all 0.3s ease;
+        }
+        *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        body{
+            background: linear-gradient(rgba(139,69,19,0.8), rgba(139,69,19,0.9)), url('https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size:cover; background-position:center; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;
+        }
+        .card{background:white;border-radius:20px; max-width:520px; width:100%; overflow:hidden; box-shadow:0 15px 35px rgba(0,0,0,0.2); transition:var(--transition);}
+        .card:hover{transform:translateY(-5px)}
+        .header{background:linear-gradient(135deg,var(--primary),var(--secondary)); color:white; padding:30px 25px; text-align:center;}
+        .header .logo i{font-size:2.2rem; color:var(--accent); display:inline-block; margin-bottom:8px;}
+        .form{padding:30px 30px 40px;}
+        .grid{display:grid; grid-template-columns:1fr 1fr; gap:15px;}
+        .form-group{margin-bottom:18px; position:relative;}
+        label{display:block; margin-bottom:6px; font-weight:600; color:var(--dark);}
+        input, select{width:100%; padding:12px 14px; border-radius:8px; border:2px solid #e9ecef; background:#f8f9fa; transition:var(--transition);}
+        input:focus, select:focus{outline:none; border-color:var(--primary); background:#fff; box-shadow:0 0 0 3px rgba(139,69,19,0.08)}
+        .full{grid-column:1 / -1;}
+        .btn{background:linear-gradient(135deg,var(--primary),var(--secondary)); color:white; border:none; padding:14px; width:100%; border-radius:8px; font-weight:600; cursor:pointer;}
+        .back{margin-top:12px; text-align:center;}
+        .back a{color:var(--primary); text-decoration:none; font-weight:600;}
+        .error{display:none; background:#ffeaea; color:var(--danger); padding:10px; border-left:4px solid var(--danger); border-radius:6px; margin-bottom:12px;}
+        .success{display:none; background:#eaffef; color:#2e7d32; padding:10px; border-left:4px solid #4CAF50; border-radius:6px; margin-bottom:12px;}
+        @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+        @media(max-width:600px){ .grid{grid-template-columns:1fr} }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-tent"></i>
+            </div>
+            <h1>The Caravan Chronicle</h1>
+            <p>Register - Create a new account</p>
+        </div>
+
+        <div class="form">
+            <div id="errorBox" class="error" role="alert"></div>
+            <div id="successBox" class="success"></div>
+
+            <form id="registerForm" novalidate>
+                <div class="grid">
+                    <div class="form-group full">
+                        <label for="fullName"><i class="fas fa-user"></i> Full Name</label>
+                        <input type="text" id="fullName" name="fullName" required placeholder="Enter full name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="role"><i class="fas fa-user-tag"></i> Role</label>
+                        <select id="role" name="role" required>
+                            <option value="">Select role</option>
+                            <option value="user">User</option>
+                            <option value="staff">Staff</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="email" name="email" required placeholder="name@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="mobile"><i class="fas fa-phone"></i> Mobile Number</label>
+                        <input type="tel" id="mobile" name="mobile" required placeholder="10 digit mobile" pattern="[0-9]{10}">
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="location"><i class="fas fa-map-marker-alt"></i> Location</label>
+                        <input type="text" id="location" name="location" required placeholder="Enter location">
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="password"><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" id="password" name="password" required placeholder="Choose a secure password (min 6 chars)">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Create Account</button>
+            </form>
+
+            <div class="back">
+                <a href="index.html"><i class="fas fa-arrow-left"></i> Back to Home Portal</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('registerForm');
+        const errorBox = document.getElementById('errorBox');
+        const successBox = document.getElementById('successBox');
+
+        function showError(message){
+            successBox.style.display = 'none';
+            errorBox.textContent = message;
+            errorBox.style.display = 'block';
+        }
+        function showSuccess(message){
+            errorBox.style.display = 'none';
+            successBox.textContent = message;
+            successBox.style.display = 'block';
+        }
+
+        form.addEventListener('submit', async function(e){
+            e.preventDefault();
+
+            const fullName = document.getElementById('fullName').value.trim();
+            const role = document.getElementById('role').value;
+            const email = document.getElementById('email').value.trim();
+            const mobile = document.getElementById('mobile').value.trim();
+            const location = document.getElementById('location').value.trim();
+            const password = document.getElementById('password').value;
+
+            // Basic validation
+            if(!fullName || !role || !email || !mobile || !location || !password){
+                showError('All fields are required.');
+                this.style.animation = 'shake 0.5s ease-in-out';
+                setTimeout(()=> this.style.animation = '', 500);
+                return;
+            }
+
+            // Email simple check
+            const emailRE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if(!emailRE.test(email)){
+                showError('Please enter a valid email address.');
+                return;
+            }
+
+            // Mobile simple check (10 digits)
+            if(!/^\d{10}$/.test(mobile)){
+                showError('Please enter a valid 10-digit mobile number.');
+                return;
+            }
+
+            if(password.length < 6){
+                showError('Password must be at least 6 characters.');
+                return;
+            }
+
+            const payload = {
+                fullName, role, email, mobile, location, password
+            };
+
+            try {
+                const res = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                const j = await res.json();
+                if (!res.ok) {
+                    showError(j.message || 'Registration failed');
+                    return;
+                }
+                showSuccess('Registration successful. Your ID: ' + (j.userId||''));
+                setTimeout(()=>{
+                    if(role === 'staff') window.location.href = 'staff-login.html';
+                    else window.location.href = 'user-login.html';
+                }, 1400);
+            } catch (err) {
+                showError('Network error');
+            }
+        });
+
+        // Clear messages on input
+        Array.from(document.querySelectorAll('#registerForm input, #registerForm select')).forEach(el=>{
+            el.addEventListener('input', ()=>{ errorBox.style.display='none'; successBox.style.display='none'; });
+        });
+    </script>
+</body>
+</html>

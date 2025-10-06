@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Dashboard - The Caravan Chronicle</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root{--primary:#8B4513;--muted:#666;--bg:#f6f6f8}
+    *{box-sizing:border-box;margin:0;padding:0;font-family:Segoe UI, Tahoma, Geneva, Verdana, sans-serif}
+    body{background:var(--bg);min-height:100vh;padding:20px;color:#222}
+    .wrap{max-width:1100px;margin:0 auto}
+    header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .brand{display:flex;gap:12px;align-items:center}
+    .brand i{font-size:28px;color:var(--primary)}
+    .card{background:#fff;border-radius:10px;padding:16px;box-shadow:0 8px 20px rgba(0,0,0,0.06)}
+    .login-panel{max-width:420px;margin:40px auto}
+    label{display:block;margin-bottom:6px;font-weight:600}
+    input[type="password"], input[type="text"]{width:100%;padding:10px;border-radius:8px;border:1px solid #e6e6e9;margin-bottom:12px}
+    .btn{background:var(--primary);color:#fff;padding:10px 12px;border-radius:8px;border:none;cursor:pointer}
+    .row{display:flex;gap:12px;align-items:center}
+    .two-col{display:grid;grid-template-columns:1fr 360px;gap:12px}
+    .pending-list{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+    .item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:8px;border:1px solid #eee;background:#fff}
+    .meta{font-size:0.95rem;color:#222}
+    .muted{color:var(--muted);font-size:0.9rem}
+    .small{font-size:0.9rem;color:var(--muted)}
+    .actions{display:flex;gap:8px}
+    .btn-approve{background:#2e7d32;color:#fff;padding:8px;border-radius:6px;border:none;cursor:pointer}
+    .btn-reject{background:#c62828;color:#fff;padding:8px;border-radius:6px;border:none;cursor:pointer}
+    .search{padding:10px;border-radius:8px;border:1px solid #e9e9ec;width:100%}
+    .note{margin-top:10px;color:var(--muted)}
+    .hidden{display:none}
+    @media(max-width:900px){ .two-col{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">
+                <i class="fas fa-tent"></i>
+            </div>
+        <div>
+          <div style="font-weight:700">The Caravan Chronicle</div>
+          <div class="small">Admin — Approvals & Management</div>
+        </div>
+      </div>
+      <div id="adminControls" class="hidden">
+        <button id="signOut" class="btn">Sign out</button>
+      </div>
+    </header>
+
+    <main>
+      <!-- Login -->
+      <div id="loginArea" class="card login-panel">
+        <h3 style="margin-bottom:10px">Admin login</h3>
+        <p class="small">Enter admin password to access approval dashboard. (Demo only — secure with real auth in production.)</p>
+        <form id="loginForm" autocomplete="off">
+          <label for="adminPwd">Admin password</label>
+          <input id="adminPwd" type="password" placeholder="Admin password" required />
+          <button class="btn" type="submit">Enter Dashboard</button>
+        </form>
+      </div>
+
+      <!-- Dashboard -->
+      <div id="dashboard" class="hidden">
+        <div class="two-col">
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <h3 style="margin:0">Pending Staff Registrations</h3>
+              <div style="display:flex;gap:8px;align-items:center">
+                <input id="searchInput" class="search" placeholder="Search by name, email or ID" />
+                <button id="refresh" class="btn">Refresh</button>
+              </div>
+            </div>
+
+            <div id="pendingList" class="pending-list" aria-live="polite"></div>
+            <div id="noPending" class="note hidden">No pending staff registrations.</div>
+            <div id="pendingError" class="note hidden" style="color:#b00020"></div>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-top:0">Admin Tools</h3>
+            <div style="margin-top:8px">
+              <button id="bulkApprove" class="btn" style="width:100%">Approve all pending</button>
+            </div>
+            <div class="note">Approving will call server endpoint /api/staff/approve for each staff. This demo does not require admin auth token — add server-side protection before production.</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Demo admin password (change in production)
+    const DEMO_ADMIN_PWD = 'admin123';
+    const loginForm = document.getElementById('loginForm');
+    const loginArea = document.getElementById('loginArea');
+    const dashboard = document.getElementById('dashboard');
+    const adminControls = document.getElementById('adminControls');
+    const pendingList = document.getElementById('pendingList');
+    const noPending = document.getElementById('noPending');
+    const pendingError = document.getElementById('pendingError');
+    const refreshBtn = document.getElementById('refresh');
+    const searchInput = document.getElementById('searchInput');
+    const bulkApprove = document.getElementById('bulkApprove');
+    const signOut = document.getElementById('signOut');
+
+    function showDashboard() {
+      loginArea.classList.add('hidden');
+      dashboard.classList.remove('hidden');
+      adminControls.classList.remove('hidden');
+      loadPending();
+    }
+    function showLogin() {
+      loginArea.classList.remove('hidden');
+      dashboard.classList.add('hidden');
+      adminControls.classList.add('hidden');
+      pendingList.innerHTML = '';
+    }
+
+    loginForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const val = document.getElementById('adminPwd').value || '';
+      if (val === DEMO_ADMIN_PWD) {
+        localStorage.setItem('adminAuth', '1');
+        showDashboard();
+      } else {
+        alert('Invalid admin password');
+      }
+    });
+
+    signOut.addEventListener('click', () => {
+      localStorage.removeItem('adminAuth');
+      showLogin();
+    });
+
+    // fetch pending staff
+    async function fetchPending() {
+      const res = await fetch('/api/staff/pending');
+      if (!res.ok) throw new Error('Failed to load pending staff');
+      return res.json();
+    }
+
+    async function loadPending() {
+      pendingError.classList.add('hidden');
+      pendingList.innerHTML = '';
+      noPending.classList.add('hidden');
+      try {
+        const j = await fetchPending();
+        const arr = j.pending || [];
+        renderPending(arr);
+      } catch (err) {
+        pendingError.textContent = err.message || 'Error';
+        pendingError.classList.remove('hidden');
+      }
+    }
+
+    function renderPending(arr) {
+      const q = (searchInput.value || '').toLowerCase().trim();
+      const filtered = arr.filter(s => {
+        if (!q) return true;
+        return (s.fullName||'').toLowerCase().includes(q) ||
+               (s.email||'').toLowerCase().includes(q) ||
+               (s.userId||'').toLowerCase().includes(q);
+      });
+      if (!filtered.length) {
+        noPending.classList.remove('hidden');
+        pendingList.innerHTML = '';
+        return;
+      }
+      noPending.classList.add('hidden');
+      pendingList.innerHTML = '';
+      filtered.forEach(s => {
+        const it = document.createElement('div');
+        it.className = 'item';
+        it.innerHTML = `
+          <div>
+            <div class="meta"><strong>${escapeHtml(s.fullName)}</strong></div>
+            <div class="muted">ID: ${escapeHtml(s.userId)} • ${escapeHtml(s.email)} • ${escapeHtml(s.mobile || '')}</div>
+          </div>
+        `;
+        const actions = document.createElement('div');
+        actions.className = 'actions';
+        const approve = document.createElement('button');
+        approve.className = 'btn-approve';
+        approve.textContent = 'Approve';
+        approve.addEventListener('click', () => approveStaff(s.userId));
+        const reject = document.createElement('button');
+        reject.className = 'btn-reject';
+        reject.textContent = 'Reject';
+        reject.addEventListener('click', () => rejectStaff(s.userId));
+        actions.appendChild(approve);
+        actions.appendChild(reject);
+        it.appendChild(actions);
+        pendingList.appendChild(it);
+      });
+    }
+
+    async function approveStaff(staffId) {
+      if (!confirm('Approve ' + staffId + '?')) return;
+      try {
+        const r = await fetch('/api/staff/approve', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ staffId })
+        });
+        const j = await r.json();
+        if (!r.ok) return alert(j.message || 'Approve failed');
+        alert('Approved ' + staffId);
+        loadPending();
+      } catch (err) {
+        alert('Network error');
+      }
+    }
+
+    // simple reject (= delete) via admin: calling server endpoint not implemented server-side here.
+    // We'll ask for confirmation then call a simple admin API if you add one later.
+    async function rejectStaff(staffId) {
+      if (!confirm('Reject and remove ' + staffId + '?')) return;
+      try {
+        // attempt optional endpoint /api/staff/reject, fallback to informing admin to delete via DB
+        const r = await fetch('/api/staff/reject', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ staffId })
+        });
+        if (r.ok) {
+          alert('Rejected ' + staffId);
+          loadPending();
+          return;
+        }
+      } catch(e){ /* ignore */ }
+      alert('Reject endpoint not available on server. Delete user from database or implement /api/staff/reject on server.');
+    }
+
+    refreshBtn.addEventListener('click', loadPending);
+    searchInput.addEventListener('input', () => {
+      // re-render using cached last response by reloading once (simple)
+      loadPending();
+    });
+
+    bulkApprove.addEventListener('click', async () => {
+      if (!confirm('Approve all pending staff?')) return;
+      try {
+        const res = await fetch('/api/staff/pending');
+        if (!res.ok) throw new Error('Failed to fetch pending');
+        const j = await res.json();
+        const list = j.pending || [];
+        for (const s of list) {
+          // sequential to avoid server overload; could be parallel with Promise.all
+          await fetch('/api/staff/approve', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ staffId: s.userId })
+          });
+        }
+        alert('All pending approved');
+        loadPending();
+      } catch (err) {
+        alert('Error: ' + (err.message || 'Failed'));
+      }
+    });
+
+    function escapeHtml(t){ return (t||'').toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]); }
+
+    // init
+    document.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('adminAuth')) {
+        showDashboard();
+      } else {
+        showLogin();
+      }
+    });
+  </script>
+</body>
+</html>
