@@ -250,10 +250,10 @@
         <div class="login-form">
             <form id="staffLoginForm">
                 <div class="form-group">
-                    <label for="staffId">
-                        <i class="fas fa-user"></i> Staff ID
+                    <label for="email">
+                        <i class="fas fa-user"></i> Email
                     </label>
-                    <input type="text" id="staffId" name="staffId" required placeholder="Enter your staff ID">
+                    <input type="email" id="email" name="email" required placeholder="Enter your Email">
                     <i class="fas fa-id-card"></i>
                 </div>
                 
@@ -270,7 +270,7 @@
                 </button>
                 
                 <div id="errorMessage" class="error-message">
-                    <i class="fas fa-exclamation-triangle"></i> Invalid staff ID or password. Please try again.
+                    <i class="fas fa-exclamation-triangle"></i> Invalid Email or password. Please try again.
                 </div>
             </form>
 
@@ -286,32 +286,36 @@
     <script>
         document.getElementById('staffLoginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const staffId = document.getElementById('staffId').value.trim();
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
+
+            if (!email || !password) {
+                const err = document.getElementById('errorMessage');
+                err.textContent = 'Email and password are required.';
+                err.style.display = 'block';
+                return;
+            }
 
             try {
                 const res = await fetch('/api/staff-login', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ staffId, password })
+                    body: JSON.stringify({ email, password })
                 });
                 const j = await res.json();
                 if (!res.ok) {
-                    // 403 -> awaiting approval
-                    if (res.status === 403) {
-                        document.getElementById('errorMessage').textContent = 'Account awaiting admin approval.';
-                    } else {
-                        document.getElementById('errorMessage').textContent = j.message || 'Invalid credentials';
-                    }
-                    document.getElementById('errorMessage').style.display = 'block';
+                    const err = document.getElementById('errorMessage');
+                    if (res.status === 403) err.textContent = 'Account awaiting admin approval.';
+                    else err.textContent = j.message || 'Invalid credentials';
+                    err.style.display = 'block';
                     this.style.animation = 'shake 0.5s ease-in-out';
                     setTimeout(()=> this.style.animation = '', 500);
                     return;
                 }
                 // success: server returned user object
                 localStorage.setItem('staffLoggedIn', 'true');
-                localStorage.setItem('staffId', j.user.userId || staffId);
-                window.location.href = 'staff-dashboard.html';
+                localStorage.setItem('email', j.user.email || email);
+                window.location.href = 'staff-portal.html';
             } catch (err) {
                 document.getElementById('errorMessage').textContent = 'Network error';
                 document.getElementById('errorMessage').style.display = 'block';
@@ -319,7 +323,7 @@
         });
 
         // Clear error message when user starts typing
-        document.getElementById('staffId').addEventListener('input', function() {
+        document.getElementById('email').addEventListener('input', function() {
             document.getElementById('errorMessage').style.display = 'none';
         });
         

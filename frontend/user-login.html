@@ -250,10 +250,10 @@
         <div class="login-form">
             <form id="userLoginForm">
                 <div class="form-group">
-                    <label for="userId">
-                        <i class="fas fa-id-badge"></i> User ID
+                    <label for="email">
+                        <i class="fas fa-id-badge"></i> Email
                     </label>
-                    <input type="text" id="userId" name="userId" required placeholder="Enter User ID">
+                    <input type="email" id="email" name="email" required placeholder="Enter Email">
                     <i class="fas fa-id-card"></i>
                 </div>
                 
@@ -285,7 +285,7 @@
 
     <script>
         const form = document.getElementById('userLoginForm');
-        const userIdInput = document.getElementById('userId');
+        const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
         const errorMessage = document.getElementById('errorMessage');
         const errorText = document.getElementById('errorText');
@@ -293,12 +293,12 @@
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const userId = userIdInput.value.trim();
+            const email = emailInput.value.trim();
             const password = passwordInput.value;
 
-            // Require user ID and password (HTML required isn't triggered because we preventDefault)
-            if (!userId || !password) {
-                errorText.textContent = 'User ID and password are required.';
+            // Require email and password (HTML required isn't triggered because we preventDefault)
+            if (!email || !password) {
+                errorText.textContent = 'Email and password are required.';
                 errorMessage.style.display = 'block';
                 this.style.animation = 'shake 0.5s ease-in-out';
                 setTimeout(() => { this.style.animation = ''; }, 500);
@@ -306,15 +306,15 @@
             }
             
             // Simple authentication (demo only; real app should verify server-side)
-            // Adjust demo credentials as needed; these are demo user IDs
-            if ((userId === 'admin' && password === 'admin123') || 
-                (userId === 'user01' && password === 'user123')) {
+            // Adjust demo credentials as needed; these are demo emails and passwords
+            if ((email === 'staff@email.com' && password === 'staff123') || 
+                (email === 'user@email.com' && password === 'user123')) {
                 // Store login state and redirect to user dashboard
                 localStorage.setItem('userLoggedIn', 'true');
-                localStorage.setItem('userId', userId);
-                window.location.href = 'user-dashboard.html';
+                localStorage.setItem('email', email);
+                window.location.href = 'user-portal.html';
             } else {
-                errorText.textContent = 'Invalid User ID or password. Please try again.';
+                errorText.textContent = 'Invalid Email or password. Please try again.';
                 errorMessage.style.display = 'block';
                 this.style.animation = 'shake 0.5s ease-in-out';
                 setTimeout(() => { this.style.animation = ''; }, 500);
@@ -322,7 +322,7 @@
         });
 
         // Clear error message when user starts typing
-        userIdInput.addEventListener('input', function() {
+        emailInput.addEventListener('input', function() {
             errorMessage.style.display = 'none';
         });
         
