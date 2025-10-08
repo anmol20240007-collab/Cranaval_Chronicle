@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Admin Login - The Caravan Chronicle</title>
+    <title>Admin Register - The Caravan Chronicle</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root{
@@ -14,21 +14,22 @@
             background: linear-gradient(rgba(139,69,19,0.8), rgba(139,69,19,0.9)), url('https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
             background-size:cover; background-position:center; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;
         }
-        .card{background:white;border-radius:20px; max-width:400px; width:100%; overflow:hidden; box-shadow:0 15px 35px rgba(0,0,0,0.2); transition:var(--transition);}
+        .card{background:white;border-radius:20px; max-width:420px; width:100%; overflow:hidden; box-shadow:0 15px 35px rgba(0,0,0,0.2); transition:var(--transition);}
         .card:hover{transform:translateY(-5px)}
         .header{background:linear-gradient(135deg,var(--primary),var(--secondary)); color:white; padding:30px 25px; text-align:center;}
         .header .logo i{font-size:2.2rem; color:var(--accent); display:inline-block; margin-bottom:8px;}
         .form{padding:30px 30px 40px;}
         .form-group{margin-bottom:18px; position:relative;}
         label{display:block; margin-bottom:6px; font-weight:600; color:var(--dark);}
-        input{width:100%; padding:12px 14px; border-radius:8px; border:2px solid #e9ecef; background:#f8f9fa; transition:var(--transition);}
-        input:focus{outline:none; border-color:var(--primary); background:#fff; box-shadow:0 0 0 3px rgba(139,69,19,0.08)}
+        input, select{width:100%; padding:12px 14px; border-radius:8px; border:2px solid #e9ecef; background:#f8f9fa; transition:var(--transition);}
+        input:focus, select:focus{outline:none; border-color:var(--primary); background:#fff; box-shadow:0 0 0 3px rgba(139,69,19,0.08)}
         .btn{background:linear-gradient(135deg,var(--primary),var(--secondary)); color:white; border:none; padding:14px; width:100%; border-radius:8px; font-weight:600; cursor:pointer;}
         .back{margin-top:12px; text-align:center;}
         .back a{color:var(--primary); text-decoration:none; font-weight:600;}
         .error{display:none; background:#ffeaea; color:var(--danger); padding:10px; border-left:4px solid var(--danger); border-radius:6px; margin-bottom:12px;}
         .success{display:none; background:#eaffef; color:#2e7d32; padding:10px; border-left:4px solid #4CAF50; border-radius:6px; margin-bottom:12px;}
         @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+        @media(max-width:600px){ .form-group{width:100%} }
     </style>
 </head>
 <body>
@@ -38,31 +39,50 @@
                 <i class="fas fa-user-shield"></i>
             </div>
             <h1>The Caravan Chronicle</h1>
-            <p>Admin Login</p>
+            <p>Admin Register - Only Authenticated Admins Can Register New Admins</p>
         </div>
+
         <div class="form">
             <div id="errorBox" class="error" role="alert"></div>
             <div id="successBox" class="success"></div>
-            <form id="adminLoginForm" novalidate>
+
+            <form id="adminRegisterForm" novalidate>
                 <div class="form-group">
-                    <label for="email"><i class="fas fa-envelope"></i> Admin Email</label>
-                    <input type="email" id="email" name="email" required placeholder="Enter admin email">
+                    <label for="requesterEmail"><i class="fas fa-envelope"></i> Your Email (Admin)</label>
+                    <input type="email" id="requesterEmail" name="requesterEmail" required placeholder="Enter your admin email">
                 </div>
+
                 <div class="form-group">
-                    <label for="password"><i class="fas fa-lock"></i> Password</label>
-                    <input type="password" id="password" name="password" required placeholder="Enter password">
+                    <label for="requesterPassword"><i class="fas fa-lock"></i> Your Password</label>
+                    <input type="password" id="requesterPassword" name="requesterPassword" required placeholder="Enter your password">
                 </div>
-                <button type="submit" class="btn">Login</button>
+
+                <hr style="margin:20px 0; border:none; border-top:1px solid #ddd;">
+
+                <div class="form-group">
+                    <label for="newAdminEmail"><i class="fas fa-envelope"></i> New Admin Email</label>
+                    <input type="email" id="newAdminEmail" name="newAdminEmail" required placeholder="Email for new admin">
+                </div>
+
+                <div class="form-group">
+                    <label for="newAdminPassword"><i class="fas fa-lock"></i> New Admin Password</label>
+                    <input type="password" id="newAdminPassword" name="newAdminPassword" required placeholder="Password for new admin">
+                </div>
+
+                <button type="submit" class="btn">Register New Admin</button>
             </form>
+
             <div class="back">
-                <a href="index.html"><i class="fas fa-arrow-left"></i> Back to Home Portal</a>
+                <a href="admin-login.html"><i class="fas fa-arrow-left"></i> Back to Admin Login</a>
             </div>
         </div>
     </div>
+
     <script>
-        const form = document.getElementById('adminLoginForm');
+        const form = document.getElementById('adminRegisterForm');
         const errorBox = document.getElementById('errorBox');
         const successBox = document.getElementById('successBox');
+
         function showError(message){
             successBox.style.display = 'none';
             errorBox.textContent = message;
@@ -73,40 +93,61 @@
             successBox.textContent = message;
             successBox.style.display = 'block';
         }
+
         form.addEventListener('submit', async function(e){
             e.preventDefault();
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            if(!email || !password){
-                showError('Both fields are required.');
+
+            const requesterEmail = document.getElementById('requesterEmail').value.trim();
+            const requesterPassword = document.getElementById('requesterPassword').value;
+            const newAdminEmail = document.getElementById('newAdminEmail').value.trim();
+            const newAdminPassword = document.getElementById('newAdminPassword').value;
+
+            // Basic validation
+            if(!requesterEmail || !requesterPassword || !newAdminEmail || !newAdminPassword){
+                showError('All fields are required.');
                 this.style.animation = 'shake 0.5s ease-in-out';
-                setTimeout(()=> this.style.animation = '', 500);
+                setTimeout(() => this.style.animation='', 500);
                 return;
             }
+
+            // Email format simple check
             const emailRE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if(!emailRE.test(email)){
-                showError('Enter a valid email address.');
+            if(!emailRE.test(requesterEmail) || !emailRE.test(newAdminEmail)){
+                showError('Please enter valid email addresses.');
                 return;
             }
+
+            if(newAdminPassword.length < 6){
+                showError('New admin password must be at least 6 characters.');
+                return;
+            }
+
+            const payload = { requesterEmail, requesterPassword, newAdminEmail, newAdminPassword };
+
             try {
-                const res = await fetch('/api/admin/login', {
+                const res = await fetch('/api/admin/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
+                    body: JSON.stringify(payload)
                 });
                 const j = await res.json();
-                if (!res.ok) {
-                    showError(j.message || 'Login failed');
+                if(!res.ok){
+                    showError(j.message || 'Registration failed');
                     return;
                 }
-                showSuccess('Login successful!');
-                setTimeout(()=>{ window.location.href = 'admin-dashboard.html'; }, 1200);
-            } catch (err) {
+                showSuccess('New admin registered successfully: ' + (j.email || ''));
+                form.reset();
+            } catch(err){
                 showError('Network error');
             }
         });
-        Array.from(document.querySelectorAll('#adminLoginForm input')).forEach(el=>{
-            el.addEventListener('input', ()=>{ errorBox.style.display='none'; successBox.style.display='none'; });
+
+        // Hide messages on input
+        Array.from(document.querySelectorAll('#adminRegisterForm input')).forEach(el => {
+            el.addEventListener('input', () => {
+                errorBox.style.display='none';
+                successBox.style.display='none';
+            });
         });
     </script>
 </body>
