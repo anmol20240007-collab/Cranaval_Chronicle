@@ -39,8 +39,8 @@
     <header>
       <div class="brand">
         <div class="logo">
-                <i class="fas fa-tent"></i>
-            </div>
+          <i class="fas fa-tent"></i>
+        </div>
         <div>
           <div style="font-weight:700">The Caravan Chronicle</div>
           <div class="small">Admin — Approvals & Management</div>
@@ -70,7 +70,7 @@
             <div style="display:flex;justify-content:space-between;align-items:center">
               <h3 style="margin:0">Pending Staff Registrations</h3>
               <div style="display:flex;gap:8px;align-items:center">
-                <input id="searchInput" class="search" placeholder="Search by name, email or ID" />
+                <input id="searchInput" class="search" placeholder="Search by name, email or mobile" />
                 <button id="refresh" class="btn">Refresh</button>
               </div>
             </div>
@@ -163,7 +163,7 @@
         if (!q) return true;
         return (s.fullName||'').toLowerCase().includes(q) ||
                (s.email||'').toLowerCase().includes(q) ||
-               (s.userId||'').toLowerCase().includes(q);
+               (s.mobile||'').toLowerCase().includes(q);
       });
       if (!filtered.length) {
         noPending.classList.remove('hidden');
@@ -178,7 +178,7 @@
         it.innerHTML = `
           <div>
             <div class="meta"><strong>${escapeHtml(s.fullName)}</strong></div>
-            <div class="muted">ID: ${escapeHtml(s.userId)} • ${escapeHtml(s.email)} • ${escapeHtml(s.mobile || '')}</div>
+            <div class="muted">Email: ${escapeHtml(s.email)} • Mobile: ${escapeHtml(s.mobile || '')} • Location: ${escapeHtml(s.location || '')}</div>
           </div>
         `;
         const actions = document.createElement('div');
@@ -186,11 +186,11 @@
         const approve = document.createElement('button');
         approve.className = 'btn-approve';
         approve.textContent = 'Approve';
-        approve.addEventListener('click', () => approveStaff(s.userId));
+        approve.addEventListener('click', () => approveStaff(s.email));
         const reject = document.createElement('button');
         reject.className = 'btn-reject';
         reject.textContent = 'Reject';
-        reject.addEventListener('click', () => rejectStaff(s.userId));
+        reject.addEventListener('click', () => rejectStaff(s.email));
         actions.appendChild(approve);
         actions.appendChild(reject);
         it.appendChild(actions);
@@ -198,17 +198,17 @@
       });
     }
 
-    async function approveStaff(staffId) {
-      if (!confirm('Approve ' + staffId + '?')) return;
+    async function approveStaff(email) {
+      if (!confirm('Approve ' + email + '?')) return;
       try {
         const r = await fetch('/api/staff/approve', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ staffId })
+          body: JSON.stringify({ email })
         });
         const j = await r.json();
         if (!r.ok) return alert(j.message || 'Approve failed');
-        alert('Approved ' + staffId);
+        alert('Approved ' + email);
         loadPending();
       } catch (err) {
         alert('Network error');
@@ -216,28 +216,25 @@
     }
 
     // simple reject (= delete) via admin: calling server endpoint not implemented server-side here.
-    // We'll ask for confirmation then call a simple admin API if you add one later.
-    async function rejectStaff(staffId) {
-      if (!confirm('Reject and remove ' + staffId + '?')) return;
+    async function rejectStaff(email) {
+      if (!confirm('Reject and remove ' + email + '?')) return;
       try {
-        // attempt optional endpoint /api/staff/reject, fallback to informing admin to delete via DB
         const r = await fetch('/api/staff/reject', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ staffId })
+          body: JSON.stringify({ email })
         });
         if (r.ok) {
-          alert('Rejected ' + staffId);
+          alert('Rejected ' + email);
           loadPending();
           return;
         }
-      } catch(e){ /* ignore */ }
+      } catch(e){ }
       alert('Reject endpoint not available on server. Delete user from database or implement /api/staff/reject on server.');
     }
 
     refreshBtn.addEventListener('click', loadPending);
     searchInput.addEventListener('input', () => {
-      // re-render using cached last response by reloading once (simple)
       loadPending();
     });
 
@@ -249,11 +246,10 @@
         const j = await res.json();
         const list = j.pending || [];
         for (const s of list) {
-          // sequential to avoid server overload; could be parallel with Promise.all
           await fetch('/api/staff/approve', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ staffId: s.userId })
+            body: JSON.stringify({ email: s.email })
           });
         }
         alert('All pending approved');
@@ -263,7 +259,11 @@
       }
     });
 
-    function escapeHtml(t){ return (t||'').toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]); }
+    function escapeHtml(t){
+      return (t||'').toString().replace(/[&<>"']/g, m => (
+        {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]
+      ));
+    }
 
     // init
     document.addEventListener('DOMContentLoaded', () => {

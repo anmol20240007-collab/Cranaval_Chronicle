@@ -290,13 +290,12 @@
         const errorMessage = document.getElementById('errorMessage');
         const errorText = document.getElementById('errorText');
 
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', async function(e) {
             e.preventDefault();
-            
+
             const email = emailInput.value.trim();
             const password = passwordInput.value;
 
-            // Require email and password (HTML required isn't triggered because we preventDefault)
             if (!email || !password) {
                 errorText.textContent = 'Email and password are required.';
                 errorMessage.style.display = 'block';
@@ -304,20 +303,30 @@
                 setTimeout(() => { this.style.animation = ''; }, 500);
                 return;
             }
-            
-            // Simple authentication (demo only; real app should verify server-side)
-            // Adjust demo credentials as needed; these are demo emails and passwords
-            if ((email === 'staff@email.com' && password === 'staff123') || 
-                (email === 'user@email.com' && password === 'user123')) {
-                // Store login state and redirect to user dashboard
-                localStorage.setItem('userLoggedIn', 'true');
-                localStorage.setItem('email', email);
-                window.location.href = 'user-portal.html';
-            } else {
-                errorText.textContent = 'Invalid Email or password. Please try again.';
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.ok) {
+                    // Store token or login state as needed
+                    localStorage.setItem('userLoggedIn', 'true');
+                    localStorage.setItem('email', email);
+                    window.location.href = 'user-portal.html';
+                } else {
+                    errorText.textContent = data.message || 'Invalid Email or password. Please try again.';
+                    errorMessage.style.display = 'block';
+                    this.style.animation = 'shake 0.5s ease-in-out';
+                    setTimeout(() => { this.style.animation = ''; }, 500);
+                }
+            } catch (err) {
+                errorText.textContent = 'Server error. Please try again later.';
                 errorMessage.style.display = 'block';
-                this.style.animation = 'shake 0.5s ease-in-out';
-                setTimeout(() => { this.style.animation = ''; }, 500);
             }
         });
 

@@ -69,11 +69,6 @@
                         <input type="email" id="email" name="email" required placeholder="name@example.com">
                     </div>
 
-                    <div class="form-group">
-                        <label for="mobile"><i class="fas fa-phone"></i> Mobile Number</label>
-                        <input type="tel" id="mobile" name="mobile" required placeholder="10 digit mobile" pattern="[0-9]{10}">
-                    </div>
-
                     <div class="form-group full">
                         <label for="location"><i class="fas fa-map-marker-alt"></i> Location</label>
                         <input type="text" id="location" name="location" required placeholder="Enter location">
@@ -116,12 +111,11 @@
             const fullName = document.getElementById('fullName').value.trim();
             const role = document.getElementById('role').value;
             const email = document.getElementById('email').value.trim();
-            const mobile = document.getElementById('mobile').value.trim();
             const location = document.getElementById('location').value.trim();
             const password = document.getElementById('password').value;
 
             // Basic validation
-            if(!fullName || !role || !email || !mobile || !location || !password){
+            if(!fullName || !role || !email || !location || !password){
                 showError('All fields are required.');
                 this.style.animation = 'shake 0.5s ease-in-out';
                 setTimeout(()=> this.style.animation = '', 500);
@@ -135,19 +129,13 @@
                 return;
             }
 
-            // Mobile simple check (10 digits)
-            if(!/^\d{10}$/.test(mobile)){
-                showError('Please enter a valid 10-digit mobile number.');
-                return;
-            }
-
             if(password.length < 6){
                 showError('Password must be at least 6 characters.');
                 return;
             }
 
             const payload = {
-                fullName, role, email, mobile, location, password
+                fullName, role, email, location, password
             };
 
             try {
@@ -161,7 +149,7 @@
                     showError(j.message || 'Registration failed');
                     return;
                 }
-                showSuccess('Registration successful. Your ID: ' + (j.userId||''));
+                showSuccess('Registration successful. Your Email: ' + (j.email || ''));
                 setTimeout(()=>{
                     if(role === 'staff') window.location.href = 'staff-login.html';
                     else window.location.href = 'user-login.html';

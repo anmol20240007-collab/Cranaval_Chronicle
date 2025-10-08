@@ -1,13 +1,14 @@
 const bcrypt = require('bcrypt');
-const User = require('../models/User');
+const User = require('../models/user');
+
 const register = async (req, res) => {
     try {
-        const { fullName, role, email, mobile, location, password } = req.body;
-        if (!fullName || !role || !email || !mobile || !location || !password) {
+        const { fullName, role, email, location, password } = req.body;
+        if (!fullName || !role || !email || !location || !password) {
             return res.status(400).json({ ok: false, message: 'All fields are required' });
         }
 
-        if (typeof fullName !== 'string' || typeof role !== 'string' || typeof email !== 'string' || typeof mobile !== 'string' || typeof location !== 'string' || typeof password !== 'string') {
+        if (typeof fullName !== 'string' || typeof role !== 'string' || typeof email !== 'string' || typeof location !== 'string' || typeof password !== 'string') {
             return res.status(400).json({ ok: false, message: 'All fields must be strings' });
         }
 
@@ -21,7 +22,6 @@ const register = async (req, res) => {
             fullName,
             role,
             email: lowerEmail,
-            mobile,
             location,
             password: hash,
             approved: role === 'staff' ? false : true
@@ -30,12 +30,14 @@ const register = async (req, res) => {
             console.error(err);
             throw err;
         });
+
         return res.json({ ok: true, message: 'Registered', email: savedUser.email });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ ok: false, message: 'Server error' });
     }
 }
+        
 
 const userLogin = async (req, res) => {
     try {
