@@ -1,266 +1,291 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Staff Portal - The Caravan Chronicle</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #8B4513;
-            --secondary: #D2691E;
-            --accent: #FFD700;
-            --dark: #3E2723;
-            --light: #F5F5DC;
-            --info: #2196F3;
-            --success: #4CAF50;
-            --danger: #F44336;
-            --shadow: 0 4px 6px rgba(0,0,0,0.1);
-            --transition: all 0.25s ease;
-        }
-        *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif}
-        body{
-            background: linear-gradient(rgba(139,69,19,0.8), rgba(139,69,19,0.9)), url('https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
-            background-size:cover;background-position:center;min-height:100vh;padding:20px;color:var(--dark)
-        }
-        .container{max-width:1200px;margin:0 auto}
-        .header{background:white;border-radius:12px;padding:20px;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow);border-left:5px solid var(--primary)}
-        .logo{display:flex;gap:12px;align-items:center}
-        .logo i{font-size:2.2rem;color:var(--primary)}
-        .logo h1{color:var(--primary);font-size:1.3rem}
-        .controls{display:flex;gap:10px;align-items:center}
-        .search{padding:10px;border-radius:8px;border:2px solid #e9ecef;background:#fff}
-        .filter{padding:10px;border-radius:8px;border:2px solid #e9ecef;background:#fff}
-        .main{margin-top:20px;display:grid;grid-template-columns:1fr;gap:18px}
-        .panel{background:white;border-radius:12px;padding:18px;box-shadow:var(--shadow);border-top:4px solid var(--primary)}
-        .panel h2{color:var(--primary);margin-bottom:12px;display:flex;gap:8px;align-items:center}
-        .list{display:flex;flex-direction:column;gap:12px}
-        .card{background:#f8f9fa;padding:14px;border-radius:10px;border-left:4px solid var(--info);position:relative;overflow:hidden;transition:var(--transition)}
-        .card:hover{transform:translateY(-3px);box-shadow:0 6px 18px rgba(0,0,0,0.08)}
-        .card-header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}
-        .cid{font-weight:700;color:var(--primary)}
-        .status{padding:6px 10px;border-radius:14px;font-weight:700;font-size:0.85rem}
-        .status-pending{background:#fff3cd;color:#856404}
-        .status-assigned{background:#cce5ff;color:#004085}
-        .status-resolved{background:#d4edda;color:#155724}
-        .status-cancelled{background:#f8d7da;color:#721c24}
-        .meta{font-size:0.9rem;color:#555;margin-bottom:8px}
-        .desc{color:#444;font-size:0.95rem;margin-bottom:10px}
-        .actions{display:flex;gap:8px;flex-wrap:wrap}
-        .btn{padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-weight:600;transition:var(--transition)}
-        .btn-assign{background:linear-gradient(135deg,var(--info),#1976D2);color:#fff}
-        .btn-resolve{background:linear-gradient(135deg,var(--success),#2e7d32);color:#fff}
-        .btn-cancel{background:linear-gradient(135deg,var(--danger),#d32f2f);color:#fff}
-        .btn:disabled{opacity:0.6;cursor:not-allowed;transform:none}
-        .empty{padding:20px;text-align:center;color:#666}
-        @media(min-width:900px){ .main{grid-template-columns:1fr 420px} }
-        .right-panel .panel{max-height:70vh;overflow:auto}
-        .note{font-size:0.85rem;color:#666;margin-top:8px}
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Staff Portal - The Caravan Chronicle</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<style>
+  :root {
+    --primary: #8B4513;
+    --secondary: #D2691E;
+    --accent: #FFD700;
+    --dark: #3E2723;
+    --light: #F5F5DC;
+    --info: #2196F3;
+    --success: #4CAF50;
+    --danger: #F44336;
+    --shadow: 0 4px 6px rgba(0,0,0,0.1);
+    --transition: all 0.25s ease;
+  }
+  * {
+    box-sizing: border-box;
+    margin: 0; padding: 0;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  body {
+    background: linear-gradient(rgba(139,69,19,0.8), rgba(139,69,19,0.9)), url('https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+    background-size:cover; background-position:center; min-height:100vh; padding:20px;
+    color: var(--dark);
+  }
+  .container {
+    max-width: 1200px;
+    margin: auto;
+  }
+  .header {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow);
+    border-left: 5px solid var(--primary);
+    position: relative;
+  }
+  .logo {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .logo i {
+    font-size: 2.2rem;
+    color: var(--primary);
+  }
+  .logo h1 {
+    color: var(--primary);
+    font-size: 1.3rem;
+  }
+  .logo div {
+    display: flex;
+    flex-direction: column;
+  }
+  .controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .search, .filter {
+    padding: 10px;
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    background: #fff;
+  }
+  .main {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  @media(min-width:900px) { .main { grid-template-columns: 1fr 420px; } }
+  .panel {
+    background: white;
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: var(--shadow);
+    border-top: 4px solid var(--primary);
+  }
+  .panel h2 {
+    color: var(--primary);
+    margin-bottom: 12px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .card {
+    background: #f8f9fa;
+    padding: 14px;
+    border-radius: 10px;
+    border-left: 4px solid var(--info);
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition);
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .cid {
+    font-weight: 700;
+    color: var(--primary);
+  }
+  .status {
+    padding: 6px 10px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+  .status-pending { background: #fff3cd; color: #856404; }
+  .status-assigned { background: #cce5ff; color: #004085; }
+  .status-resolved { background: #d4edda; color: #155724; }
+  .status-cancelled { background:#f8d7da; color:#721c24; }
+  .meta {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 8px;
+  }
+  .desc {
+    color: #444;
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+  }
+  .actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: var(--transition);
+  }
+  .btn-assign { background: linear-gradient(135deg, var(--info), #1976D2); color: #fff; }
+  .btn-resolve { background: linear-gradient(135deg, var(--success), #2e7d32); color: #fff; }
+  .btn-cancel { background: linear-gradient(135deg, var(--danger), #d32f2f); color: #fff; }
+  .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+  .empty {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+  }
+  .right-panel .panel {
+    max-height: 70vh;
+    overflow: auto;
+  }
+  .note {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 8px;
+  }
+
+  a.detail-link {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">
-                <div class="logo">
-                <i class="fas fa-tent"></i>
-            </div>
-                <div>
-                    <h1>The Caravan Chronicle</h1>
-                    <div style="font-size:0.9rem;color:#666">Staff Portal — Manage Complaints</div>
-                </div>
-            </div>
-
-            <div class="controls">
-                <input id="searchInput" class="search" placeholder="Search by Complaint ID or name">
-                <select id="statusFilter" class="filter">
-                    <option value="">All statuses</option>
-                    <option value="pending">Pending</option>
-                    <option value="assigned">Assigned</option>
-                    <option value="resolved">Resolved</option>
-                    <option value="cancelled">Cancelled</option>
-                </select>
-                <a href="index.html" class="btn" style="background:var(--primary);color:#fff;border-radius:8px;padding:9px 12px;text-decoration:none">Back</a>
-            </div>
-        </div>
-
-        <div class="main">
-            <div class="panel">
-                <h2><i class="fas fa-list"></i> All Complaints</h2>
-                <div id="complaintList" class="list"></div>
-                <div id="emptyMsg" class="empty">No complaints available.</div>
-                <div class="note">Select a complaint and use action buttons to change status. Changes are saved to localStorage.</div>
-            </div>
-
-            <div class="right-panel">
-                <div class="panel">
-                    <h2><i class="fas fa-info-circle"></i> Quick Stats</h2>
-                    <div id="stats"></div>
-                    <hr style="margin:12px 0;border:none;border-top:1px solid #eee">
-                    <h3 style="margin:0 0 8px 0;color:var(--primary);font-size:1rem">Selected Complaint</h3>
-                    <div id="selectedDetail" style="color:#555">No complaint selected.</div>
-                </div>
-            </div>
-        </div>
+<div class="container">
+  <div class="header">
+    <div class="logo">
+      <i class="fas fa-tent"></i>
+      <div>
+        <h1>The Caravan Chronicle</h1>
+        <div style="font-size:0.9rem;color:#666">Staff Portal — Manage Complaints</div>
+      </div>
     </div>
+    <div class="controls">
+      <input id="searchInput" class="search" placeholder="Search by Complaint ID or name" autocomplete="off" />
+      <select id="statusFilter" class="filter">
+        <option value="">All statuses</option>
+        <option value="pending">Pending</option>
+        <option value="assigned">Assigned</option>
+        <option value="resolved">Resolved</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+      <select id="urgencyFilter" class="filter">
+        <option value="">All urgencies</option>
+        <option value="least">Least Urgent</option>
+        <option value="lesser">Lesser Urgent</option>
+        <option value="normal">Normal</option>
+        <option value="more">More Urgent</option>
+        <option value="most">Most Urgent</option>
+      </select>
 
-    <script>
-        // Utilities
-        const getComplaints = () => JSON.parse(localStorage.getItem('complaints') || '[]');
-        const setComplaints = (arr) => localStorage.setItem('complaints', JSON.stringify(arr));
-        const el = id => document.getElementById(id);
+      <a href="index.html" class="btn" style="background:var(--primary);color:#fff;border-radius:8px;padding:9px 12px;text-decoration:none">Back</a>
+    </div>
+  </div>
 
-        // Render
-        function renderComplaints() {
-            const list = el('complaintList');
-            const empty = el('emptyMsg');
-            const complaints = getComplaints().slice().reverse(); // show newest first
-            const filter = el('statusFilter').value;
-            const query = el('searchInput').value.trim().toLowerCase();
+  <div class="main">
+    <div class="panel">
+      <h2><i class="fas fa-list"></i> Registered Complaints</h2>
+      <div id="complaintList" class="list"></div>
+      <div id="emptyMsg" class="empty">No complaints available.</div>
+      <div class="note">Select a complaint and click "Details" to update status.</div>
+    </div>
+  </div>
+</div>
 
-            const filtered = complaints.filter(c => {
-                if (filter && c.status !== filter) return false;
-                if (!query) return true;
-                return c.id.toLowerCase().includes(query) || (c.name || '').toLowerCase().includes(query) || (c.description || '').toLowerCase().includes(query);
-            });
+<script>
+  // Replace with backend API endpoint to fetch complaints (only registered in DB)
+  async function fetchComplaints() {
+    try {
+      const res = await fetch('/api/complaints/all'); // Assuming you have this GET endpoint
+      if (!res.ok) throw new Error('Failed to fetch complaints');
+      return await res.json();
+    } catch (err) {
+      alert('Error fetching complaints: ' + err.message);
+      return [];
+    }
+  }
 
-            list.innerHTML = '';
-            if (!filtered.length) {
-                empty.style.display = 'block';
-                updateStats(complaints);
-                return;
-            }
-            empty.style.display = 'none';
+  function escapeHtml(text) {
+    return text.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]);
+  }
 
-            filtered.forEach(c => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <div class="card-header">
-                        <div><span class="cid">${c.id}</span> &nbsp; <small style="color:#666">${c.site || ''} • ${c.type || ''}</small></div>
-                        <div><span class="status status-${c.status}">${capitalize(c.status)}</span></div>
-                    </div>
-                    <div class="meta"><strong>${escapeHtml(c.name||'Anonymous')}</strong> • ${c.email || ''} • ${c.phone || ''} • ${c.date || ''}</div>
-                    <div class="desc">${escapeHtml((c.description||'').slice(0,300))}</div>
-                    <div class="actions" style="margin-top:8px"></div>
-                `;
-                // actions
-                const actions = card.querySelector('.actions');
+  // Render complaints in list
+  async function renderComplaints() {
+    const complaintList = document.getElementById('complaintList');
+    const emptyMsg = document.getElementById('emptyMsg');
+    complaintList.innerHTML = '';
+    const filter = document.getElementById('statusFilter').value;
+    const query = document.getElementById('searchInput').value.trim().toLowerCase();
+    const urgencyFilterValue = document.getElementById('urgencyFilter').value;
+    const data = await fetchComplaints();
 
-                const assignBtn = makeBtn('Assign', 'btn-assign', () => updateStatus(c.id, 'assigned'));
-                const resolveBtn = makeBtn('Resolve', 'btn-resolve', () => updateStatus(c.id, 'resolved'));
-                const cancelBtn = makeBtn('Cancel', 'btn-cancel', () => {
-                    if (!confirm('Cancel this complaint? This action can be reversed.')) return;
-                    updateStatus(c.id, 'cancelled');
-                });
+    const filtered = data.filter(c => {
+      if (filter && c.status !== filter) return false;         // status filter
+      if (urgencyFilterValue && c.urgency !== urgencyFilterValue) return false;  // urgency filter
+      if (!query) return true;
+      return c.id.toLowerCase().includes(query) || c.name.toLowerCase().includes(query);
+    });
 
-                // Enforce allowed transitions:
-                // pending -> assigned -> resolved
-                // cancel allowed at any time
-                if (c.status === 'pending') {
-                    // from pending only allow assigning or cancelling
-                    actions.appendChild(assignBtn);
-                    actions.appendChild(cancelBtn);
-                } else if (c.status === 'assigned') {
-                    // assigned can be resolved or cancelled
-                    actions.appendChild(resolveBtn);
-                    actions.appendChild(cancelBtn);
-                } else if (c.status === 'resolved' || c.status === 'cancelled') {
-                    // provide option to re-assign (reopen) to assigned if needed
-                    const reopen = makeBtn('Re-assign', 'btn-assign', () => {
-                        if (!confirm('Re-assign this complaint back to "assigned"?')) return;
-                        updateStatus(c.id, 'assigned');
-                    });
-                    actions.appendChild(reopen);
-                }
+    if (!filtered.length) {
+      emptyMsg.style.display = 'block';
+      return;
+    } else {
+      emptyMsg.style.display = 'none';
+    }
+    filtered.forEach(c => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-header">
+          <div><span class="cid">${escapeHtml(c.id)}</span> &nbsp; <small style="color:#666">${escapeHtml(c.location || '')} • ${escapeHtml(c.type || '')}</small></div>
+          <div><span class="status status-${c.status}">${c.status.charAt(0).toUpperCase() + c.status.slice(1)}</span></div>
+        </div>
+        <div class="meta"><strong>${escapeHtml(c.name)}</strong> • ${escapeHtml(c.email)}</div>
+        <div class="desc">${escapeHtml(c.description.slice(0, 300))}</div>
+        <div class="actions" style="margin-top:8px;">
+          <a href="update-complaint.html" class="detail-link">Details</a>
+        </div>`;
+      complaintList.appendChild(card);
+    });
+  }
 
-                // click to select and show detail
-                card.addEventListener('click', (e) => {
-                    // avoid triggering when clicking buttons
-                    if (e.target.tagName.toLowerCase() === 'button' || e.target.closest('button')) return;
-                    showSelected(c.id);
-                });
+  document.getElementById('searchInput').addEventListener('input', renderComplaints);
+  document.getElementById('statusFilter').addEventListener('change', renderComplaints);
+  document.getElementById('urgencyFilter').addEventListener('change', renderComplaints);
 
-                list.appendChild(card);
-            });
-
-            updateStats(complaints);
-        }
-
-        function makeBtn(text, cls, handler) {
-            const b = document.createElement('button');
-            b.className = 'btn ' + cls;
-            b.textContent = text;
-            b.addEventListener('click', (e) => { e.stopPropagation(); handler(); });
-            return b;
-        }
-
-        function updateStatus(id, newStatus) {
-            const complaints = getComplaints();
-            const idx = complaints.findIndex(c => c.id === id);
-            if (idx === -1) return alert('Complaint not found');
-            // Optional: enforce transition rules on updateStatus as well
-            const current = complaints[idx].status;
-            if (newStatus === 'resolved' && current !== 'assigned') {
-                return alert('Complaint must be assigned before it can be resolved.');
-            }
-            if (newStatus === 'assigned' && current === 'assigned') {
-                // no-op
-                return;
-            }
-            complaints[idx].status = newStatus;
-            complaints[idx].update = new Date().toISOString().split('T')[0];
-            setComplaints(complaints);
-            renderComplaints();
-            showSelected(id);
-        }
-
-        function showSelected(id) {
-            const complaints = getComplaints();
-            const c = complaints.find(x => x.id === id);
-            const out = el('selectedDetail');
-            if (!c) { out.textContent = 'No complaint selected.'; return; }
-            out.innerHTML = `
-                <div style="font-weight:700;color:var(--primary);margin-bottom:6px">${escapeHtml(c.id)} — ${capitalize(c.status)}</div>
-                <div style="font-size:0.95rem;margin-bottom:6px"><strong>${escapeHtml(c.name||'Anonymous')}</strong> • ${c.email||''} • ${c.phone||''}</div>
-                <div style="margin-bottom:8px;color:#444">${escapeHtml(c.description||'')}</div>
-                <div style="font-size:0.9rem;color:#666"><strong>Site:</strong> ${escapeHtml(c.site||'')} • <strong>Type:</strong> ${escapeHtml(c.type||'')}</div>
-                <div style="margin-top:8px;color:#666;font-size:0.85rem"><strong>Submitted:</strong> ${c.date||'N/A'} • <strong>Last Updated:</strong> ${c.update||'N/A'}</div>
-            `;
-        }
-
-        function updateStats(all) {
-            const s = el('stats');
-            const total = all.length;
-            const pending = all.filter(x=>x.status==='pending').length;
-            const assigned = all.filter(x=>x.status==='assigned').length;
-            const resolved = all.filter(x=>x.status==='resolved').length;
-            const cancelled = all.filter(x=>x.status==='cancelled').length;
-            s.innerHTML = `
-                <div style="display:flex;flex-direction:column;gap:6px">
-                    <div><strong>Total:</strong> ${total}</div>
-                    <div><strong style="color:#856404">Pending:</strong> ${pending}</div>
-                    <div><strong style="color:#004085">Assigned:</strong> ${assigned}</div>
-                    <div><strong style="color:#155724">Resolved:</strong> ${resolved}</div>
-                    <div><strong style="color:#721c24">Cancelled:</strong> ${cancelled}</div>
-                </div>
-            `;
-        }
-
-        // small helpers
-        function capitalize(s){ return (s||'').toString().replace(/(^|\-)([a-z])/g, (m,p,c)=> (p? p : '') + c.toUpperCase()) }
-        function escapeHtml(t){ return (t||'').toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]); }
-
-        // events
-        el('statusFilter').addEventListener('change', renderComplaints);
-        el('searchInput').addEventListener('input', () => { renderComplaints(); });
-
-        // initial render
-        document.addEventListener('DOMContentLoaded', () => {
-            // Ensure complaints key exists (if user portal seeded it earlier, this will not overwrite)
-            if (!localStorage.getItem('complaints')) localStorage.setItem('complaints', JSON.stringify([]));
-            renderComplaints();
-        });
-    </script>
+  // Initial rendering
+  renderComplaints();
+</script>
 </body>
 </html>

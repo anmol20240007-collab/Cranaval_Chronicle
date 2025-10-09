@@ -5,7 +5,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config(); 
 
-const { register, userLogin, staffLogin, staffPending, staffApprove, registerAdmin, loginAdmin } = require('./router/auth');
+const { register, userLogin, staffLogin, staffPending, staffApprove, registerAdmin, loginAdmin, registerComplaint, updateComplaint, getComplaints } = require('./router/auth');
+const { get } = require('http');
 
 const app = express();
 app.use(cors());
@@ -27,6 +28,10 @@ router.get('/api/staff/pending', staffPending);
 router.post('/api/staff/approve', staffApprove);
 router.post('/api/admin/register', registerAdmin);
 router.post('/api/admin/login', loginAdmin);
+router.post('/api/complaints/register', registerComplaint);
+router.post('/api/complaints/update-status', updateComplaint);
+router.get('/api/complaints/all', getComplaints);
+
 
 // Use router in app
 app.use(router);

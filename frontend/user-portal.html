@@ -6,7 +6,6 @@
     <title>User Portal - The Caravan Chronicle</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* CSS Variables */
         :root {
             --primary: #8B4513;
             --secondary: #D2691E;
@@ -20,611 +19,271 @@
             --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
         }
-
         * {
-            margin: 0;
-            padding: 0;
+            margin:0; padding:0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
         body {
             background: linear-gradient(rgba(139, 69, 19, 0.8), rgba(139, 69, 19, 0.9)), url('https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            min-height: 100vh;
-            padding: 20px;
-            color: var(--dark);
+            background-size:cover; background-position:center; background-attachment:fixed; min-height:100vh; padding:20px; color:var(--dark);
         }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
+        .container { max-width:1200px; margin:0 auto;}
         .header {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-left: 5px solid var(--primary);
-            transition: var(--transition);
+            background:white; border-radius:15px; padding:25px; margin-bottom:20px;
+            box-shadow: var(--shadow); display:flex; justify-content:space-between; align-items:center;
+            border-left: 5px solid var(--primary); transition: var(--transition); position:relative;
         }
-
-        .header:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logo i {
-            font-size: 2.5rem;
-            color: var(--accent);
-        }
-
-        .logo h1 {
-            color: var(--primary);
-            font-size: 1.8rem;
-        }
-
-        .logo p {
-            color: #666;
-            font-size: 0.9rem;
-            margin-top: 5px;
-        }
-
+        .header:hover { transform:translateY(-2px); box-shadow:0 8px 25px rgba(0,0,0,0.15);}
+        .logo { display: flex; align-items:center; gap:15px;}
+        .logo i { font-size:2.5rem; color:var(--accent);}
+        .logo h1 { color:var(--primary); font-size:1.8rem;}
+        .logo p { color:#666; font-size:0.9rem; margin-top:5px;}
         .nav-links a {
-            text-decoration: none;
-            color: var(--primary);
-            margin-left: 20px;
-            font-weight: 600;
-            transition: var(--transition);
-            padding: 8px 15px;
-            border-radius: 5px;
+            text-decoration:none; color:var(--primary); margin-left:20px; font-weight:600;
+            transition:var(--transition); padding:8px 15px; border-radius:5px;
         }
-
-        .nav-links a:hover {
-            color: var(--accent);
-            background: rgba(139, 69, 19, 0.1);
+        .nav-links a:hover { color:var(--accent); background:rgba(139,69,19,0.1);}
+        .main-content { display:grid; grid-template-columns:1fr 1fr; gap:25px;}
+        @media (max-width:768px){
+            .main-content { grid-template-columns:1fr; }
+            .header { flex-direction:column; gap:15px; text-align:center;}
+            .nav-links { display:flex; gap:10px;}
+            .nav-links a { margin-left:0;}
+            .logout-btn { position:static; margin-top:10px; right:auto;}
         }
-
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
-        }
-
-        @media (max-width: 768px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .header {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
-            }
-            
-            .nav-links {
-                display: flex;
-                gap: 10px;
-            }
-            
-            .nav-links a {
-                margin-left: 0;
-            }
-        }
-
         .complaint-form, .complaint-status {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            border-top: 4px solid var(--primary);
+            background:white; border-radius:15px; padding:30px; box-shadow:var(--shadow); transition:var(--transition); border-top:4px solid var(--primary);
         }
-
-        .complaint-form:hover, .complaint-status:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-        }
-
-        .section-title {
-            color: var(--primary);
-            margin-bottom: 25px;
-            font-size: 1.5rem;
-            border-bottom: 2px solid var(--accent);
-            padding-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .section-title i {
-            color: var(--secondary);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--dark);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .form-group label i {
-            color: var(--primary);
-            width: 20px;
-        }
-
+        .complaint-form:hover, .complaint-status:hover { transform:translateY(-5px); box-shadow:0 10px 30px rgba(0,0,0,0.15);}
+        .section-title { color:var(--primary); margin-bottom:25px; font-size:1.5rem; border-bottom:2px solid var(--accent); padding-bottom:10px; display:flex; align-items:center; gap:10px;}
+        .section-title i { color:var(--secondary);}
+        .form-group { margin-bottom:20px; position:relative;}
+        .form-group label { display:block; margin-bottom:8px; color:var(--dark); font-weight:600; display:flex; align-items:center; gap:8px;}
+        .form-group label i { color:var(--primary); width:20px;}
         .form-group input,
         .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: var(--transition);
-            background: #f8f9fa;
-        }
-
+        .form-group textarea { width:100%; padding:12px 15px; border:2px solid #e9ecef; border-radius:8px; font-size:1rem; transition:var(--transition); background:#f8f9fa;}
         .form-group input:focus,
         .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: white;
-            box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
-        }
-
+        .form-group textarea:focus { outline:none; border-color:var(--primary); background:white; box-shadow:0 0 0 3px rgba(139,69,19,0.1);}
         .submit-btn {
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            width: 100%;
-            position: relative;
-            overflow: hidden;
+            color: white; border:none; padding:15px 30px; border-radius:8px; font-size:1.1rem; font-weight:600; cursor:pointer;
+            transition:var(--transition); width:100%; position:relative; overflow:hidden;
         }
-
         .submit-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: 0.5s;
+            content: ''; position:absolute; top:0; left:-100%; width:100%; height:100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition:0.5s;
         }
-
-        .submit-btn:hover::before {
-            left: 100%;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.4);
-        }
-
-        .status-check {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .status-check input {
-            flex: 1;
-            padding: 12px 15px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        .status-check input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
-        }
-
-        .check-btn {
-            background: var(--info);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: 600;
-        }
-
-        .check-btn:hover {
-            background: #1976D2;
-            transform: translateY(-2px);
-        }
-
-        .complaint-card {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-left: 4px solid var(--info);
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .complaint-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(139, 69, 19, 0.05), transparent);
-            transition: 0.5s;
-        }
-
-        .complaint-card:hover::before {
-            left: 100%;
-        }
-
-        .complaint-card:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .complaint-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .complaint-id {
-            font-weight: bold;
-            color: var(--primary);
-            font-size: 1.1rem;
-        }
-
-        .status {
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-
-        .status-pending {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .status-in-progress {
-            background: #cce7ff;
-            color: #004085;
-        }
-
-        .status-resolved {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .complaint-details {
-            color: #666;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        .complaint-details strong {
-            color: var(--dark);
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .back-btn {
-            background: #6c757d;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            margin-top: 10px;
-            transition: var(--transition);
-        }
-
-        .back-btn:hover {
-            background: #5a6268;
-            transform: translateY(-2px);
-        }
-
-        #sampleComplaints {
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid #e9ecef;
-        }
-
-        #sampleComplaints h3 {
-            color: var(--primary);
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .success-message {
-            background: #d4edda;
-            color: #155724;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--success);
-            display: none;
-        }
+        .submit-btn:hover::before { left:100%; }
+        .submit-btn:hover { transform:translateY(-2px); box-shadow:0 5px 15px rgba(139,69,19,0.4);}
+        .status-check { display:flex; gap:10px; margin-bottom:20px;}
+        .status-check input { flex:1; padding:12px 15px; border:2px solid #e9ecef; border-radius:8px; font-size:1rem; transition:var(--transition);}
+        .status-check input:focus { outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(139,69,19,0.1);}
+        .check-btn { background:var(--info); color:white; border:none; padding:12px 20px; border-radius:8px; cursor:pointer; transition:var(--transition); font-weight:600;}
+        .check-btn:hover { background:#1976D2; transform:translateY(-2px);}
+        .complaint-card { background:#f8f9fa; border-radius:10px; padding:20px; margin-bottom:15px; border-left:4px solid var(--info); transition:var(--transition); position:relative; overflow:hidden;}
+        .complaint-card::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg, transparent, rgba(139,69,19,0.05), transparent); transition:0.5s;}
+        .complaint-card:hover::before { left:100%; }
+        .complaint-card:hover { transform:translateX(5px); box-shadow:0 5px 15px rgba(0,0,0,0.1);}
+        .complaint-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;}
+        .complaint-id { font-weight:bold; color:var(--primary); font-size:1.1rem;}
+        .status { padding:6px 12px; border-radius:15px; font-size:0.8rem; font-weight:bold;}
+        .status-pending { background:#fff3cd; color:#856404;}
+        .status-in-progress{ background:#cce7ff; color:#004085;}
+        .status-resolved{ background:#d4edda; color:#155724;}
+        .complaint-details { color:#666; font-size:0.9rem; line-height:1.5;}
+        .complaint-details strong { color:var(--dark);}
+        .hidden { display:none;}
+        .back-btn { background:#6c757d; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:5px; margin-top:10px; transition:var(--transition);}
+        .back-btn:hover { background:#5a6268; transform:translateY(-2px);}
+        #sampleComplaints { margin-top:25px; padding-top:20px; border-top:1px solid #e9ecef;}
+        #sampleComplaints h3 { color:var(--primary); margin-bottom:15px; font-size:1.1rem; display:flex; align-items:center; gap:8px;}
+        .success-message { background:#d4edda; color:#155724; padding:15px; border-radius:8px; margin-bottom:20px; border-left:4px solid var(--success); display:none;}
+        #allComplaints { margin-top:25px; padding-top:20px; border-top:1px solid #e9ecef;}
+        #allComplaints h3 { color:var(--primary); margin-bottom:15px; font-size:1.1rem; display:flex; align-items:center; gap:8px;}
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">
-                <i class="fas fa-tent"></i>
-                <div>
-                    <h1>The Caravan <span>Chronicle</span></h1>
-                    <p>Citizen Complaint Portal</p>
-                </div>
-            </div>
-            <div class="nav-links">
-                <a href="index.html"><i class="fas fa-home"></i> Home</a>
-                <a href="#contact"><i class="fas fa-phone"></i> Contact</a>
-            </div>
+<div class="container">
+  <div class="header">
+    <div class="logo">
+      <i class="fas fa-tent"></i>
+      <div>
+        <h1>The Caravan <span>Chronicle</span></h1>
+        <p>Citizen Complaint Portal</p>
+      </div>
+    </div>
+    <div class="nav-links">
+      <a href="index.html"><i class="fas fa-home"></i> Home</a>
+      <a href="#contact"><i class="fas fa-phone"></i> Contact</a>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="complaint-form">
+      <h2 class="section-title"><i class="fas fa-edit"></i> Raise New Complaint</h2>
+      <div id="successMessage" class="success-message" style="display:none;">
+        <i class="fas fa-check-circle"></i> Complaint submitted successfully! Your Complaint ID: <strong id="newComplaintId"></strong>
+      </div>
+      <form id="complaintForm">
+        <div class="form-group">
+          <label for="name"><i class="fas fa-user"></i> Full Name</label>
+          <input type="text" id="name" name="name" required placeholder="Enter your full name">
         </div>
-
-        <div class="main-content">
-            <div class="complaint-form">
-                <h2 class="section-title">
-                    <i class="fas fa-edit"></i> Raise New Complaint
-                </h2>
-                
-                <div id="successMessage" class="success-message">
-                    <i class="fas fa-check-circle"></i> Complaint submitted successfully!
-                </div>
-                
-                <form id="complaintForm">
-                    <div class="form-group">
-                        <label for="name">
-                            <i class="fas fa-user"></i> Full Name
-                        </label>
-                        <input type="text" id="name" name="name" required placeholder="Enter your full name">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="email">
-                            <i class="fas fa-envelope"></i> Email Address
-                        </label>
-                        <input type="email" id="email" name="email" required placeholder="Enter your email address">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="phone">
-                            <i class="fas fa-phone"></i> Phone Number
-                        </label>
-                        <input type="tel" id="phone" name="phone" required placeholder="Enter your phone number">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="caravanSite">
-                            <i class="fas fa-map-marker-alt"></i> Caravan Site
-                        </label>
-                        <select id="caravanSite" name="caravanSite" required>
-                            <option value="">Select a site</option>
-                            <option value="goa">Goa Beach Caravan Park</option>
-                            <option value="himachal">Himachal Mountain Site</option>
-                            <option value="rajasthan">Rajasthan Desert Camp</option>
-                            <option value="kerala">Kerala Backwaters</option>
-                            <option value="other">Other Location</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="complaintType">
-                            <i class="fas fa-tag"></i> Complaint Type
-                        </label>
-                        <select id="complaintType" name="complaintType" required>
-                            <option value="">Select type</option>
-                            <option value="facility">Facility Issue</option>
-                            <option value="hygiene">Hygiene & Cleanliness</option>
-                            <option value="staff">Staff Behavior</option>
-                            <option value="safety">Safety Concern</option>
-                            <option value="booking">Booking Issue</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="description">
-                            <i class="fas fa-comment"></i> Complaint Description
-                        </label>
-                        <textarea id="description" name="description" rows="5" required placeholder="Please describe your complaint in detail..."></textarea>
-                    </div>
-                    
-                    <button type="submit" class="submit-btn">
-                        <i class="fas fa-paper-plane"></i> Submit Complaint
-                    </button>
-                </form>
-            </div>
-
-            <div class="complaint-status">
-                <h2 class="section-title">
-                    <i class="fas fa-search"></i> Check Complaint Status
-                </h2>
-                
-                <div class="status-check">
-                    <input type="text" id="trackingId" placeholder="Enter Complaint ID (e.g., TC-2024-001)">
-                    <button class="check-btn" onclick="checkStatus()">
-                        <i class="fas fa-search"></i> Check
-                    </button>
-                </div>
-                
-                <div id="statusResult" class="hidden">
-                    <div class="complaint-card">
-                        <div class="complaint-header">
-                            <span class="complaint-id" id="resultId">TC-001</span>
-                            <span class="status status-pending" id="resultStatus">Pending</span>
-                        </div>
-                        <div class="complaint-details">
-                            <p><strong>Description:</strong> <span id="resultDescription">No description available</span></p>
-                            <p><strong>Submitted:</strong> <span id="resultDate">N/A</span></p>
-                            <p><strong>Last Updated:</strong> <span id="resultUpdate">N/A</span></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="sampleComplaints">
-                    <h3><i class="fas fa-info-circle"></i> Sample Complaints (for testing)</h3>
-                    <div class="complaint-card">
-                        <div class="complaint-header">
-                            <span class="complaint-id">TC-2024-001</span>
-                            <span class="status status-resolved">Resolved</span>
-                        </div>
-                        <div class="complaint-details">
-                            <p><strong>Description:</strong> Broken water supply in Goa site</p>
-                            <p><strong>Submitted:</strong> 2024-01-15</p>
-                        </div>
-                    </div>
-                    
-                    <div class="complaint-card">
-                        <div class="complaint-header">
-                            <span class="complaint-id">TC-2024-002</span>
-                            <span class="status status-in-progress">In Progress</span>
-                        </div>
-                        <div class="complaint-details">
-                            <p><strong>Description:</strong> Cleaning issue in mountain site bathroom</p>
-                            <p><strong>Submitted:</strong> 2024-01-16</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="form-group">
+          <label for="email"><i class="fas fa-envelope"></i> Email Address</label>
+          <input type="email" id="email" name="email" required placeholder="Enter your email address">
         </div>
+        <div class="form-group">
+          <label for="location"><i class="fas fa-map-marker-alt"></i> Location</label>
+          <input type="text" id="location" name="location" required placeholder="Enter caravan location">
+        </div>
+        <div class="form-group">
+          <label for="urgency"><i class="fas fa-tag"></i> Complaint Urgency</label>
+          <select id="urgency" name="urgency" required>
+            <option value="">Select type</option>
+            <option value="least">Least Urgent</option>
+            <option value="lesser">Lesser Urgent</option>
+            <option value="normal">Normal</option>
+            <option value="more">More Urgent</option>
+            <option value="most">Most Urgent</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="description"><i class="fas fa-comment"></i> Complaint Description</label>
+          <textarea id="description" name="description" rows="5" required placeholder="Please describe your complaint in detail..."></textarea>
+        </div>
+        <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Submit Complaint</button>
+      </form>
     </div>
 
-    <script>
-        // Initialize complaints in localStorage if not exists
-        if (!localStorage.getItem('complaints')) {
-            const sampleComplaints = [
-                {
-                    id: 'TC-2024-001',
-                    name: 'John Doe',
-                    email: 'john@example.com',
-                    phone: '9876543210',
-                    site: 'goa',
-                    type: 'facility',
-                    description: 'Broken water supply in Goa site. The water tap in area A is not working since morning.',
-                    status: 'resolved',
-                    date: '2024-01-15',
-                    update: '2024-01-16'
-                },
-                {
-                    id: 'TC-2024-002',
-                    name: 'Jane Smith',
-                    email: 'jane@example.com',
-                    phone: '9876543211',
-                    site: 'himachal',
-                    type: 'hygiene',
-                    description: 'Cleaning issue in mountain site bathroom. The restrooms need immediate attention.',
-                    status: 'in-progress',
-                    date: '2024-01-16',
-                    update: '2024-01-16'
-                }
-            ];
-            localStorage.setItem('complaints', JSON.stringify(sampleComplaints));
-        }
+    <div class="complaint-status">
+      <h2 class="section-title"><i class="fas fa-search"></i> Check Complaint Status</h2>
+      <div class="status-check">
+        <input type="text" id="trackingId" placeholder="Enter Complaint ID (e.g., TC-2024-001)">
+        <button class="check-btn" onclick="checkStatus()"><i class="fas fa-search"></i> Check</button>
+      </div>
+      <div id="statusResult" class="hidden">
+        <div class="complaint-card">
+          <div class="complaint-header">
+            <span class="complaint-id" id="resultId"></span>
+            <span class="status" id="resultStatus"></span>
+          </div>
+          <div class="complaint-details">
+            <p><strong>Description:</strong> <span id="resultDescription"></span></p>
+            <p><strong>Submitted:</strong> <span id="resultDate"></span></p>
+            <p><strong>Last Updated:</strong> <span id="resultUpdate"></span></p>
+          </div>
+        </div>
+      </div>
+      <div id="allComplaints">
+      </div>
+    </div>
+  </div>
+</div>
 
-        document.getElementById('complaintForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = {
-                id: 'TC-' + new Date().getFullYear() + '-' + String(Date.now()).slice(-4),
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                site: document.getElementById('caravanSite').value,
-                type: document.getElementById('complaintType').value,
-                description: document.getElementById('description').value,
-                status: 'pending',
-                date: new Date().toISOString().split('T')[0],
-                update: new Date().toISOString().split('T')[0]
-            };
+<script>
+  function logoutUser() {
+    window.location.href = "index.html";
+  }
 
-            // Save to localStorage
-            const complaints = JSON.parse(localStorage.getItem('complaints')) || [];
-            complaints.push(formData);
-            localStorage.setItem('complaints', JSON.stringify(complaints));
+  document.getElementById('complaintForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
 
-            // Show success message
-            const successMessage = document.getElementById('successMessage');
-            successMessage.innerHTML = `<i class="fas fa-check-circle"></i> Complaint submitted successfully! Your Complaint ID: <strong>${formData.id}</strong>`;
-            successMessage.style.display = 'block';
-            
-            // Hide success message after 5 seconds
-            setTimeout(() => {
-                successMessage.style.display = 'none';
-            }, 5000);
+    const formData = {
+      name: document.getElementById('name').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      location: document.getElementById('location').value.trim(),
+      urgency: document.getElementById('urgency').value,
+      description: document.getElementById('description').value.trim()
+    };
 
-            this.reset();
-        });
+    try {
+      const res = await fetch('/api/complaints/register', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(formData)
+      });
+      const json = await res.json();
 
-        function checkStatus() {
-            const trackingId = document.getElementById('trackingId').value;
-            const complaints = JSON.parse(localStorage.getItem('complaints')) || [];
-            const complaint = complaints.find(c => c.id === trackingId);
+      if (!res.ok) {
+        alert(json.message || 'Failed to submit complaint.');
+        return;
+      }
 
-            const resultDiv = document.getElementById('statusResult');
-            
-            if (complaint) {
-                document.getElementById('resultId').textContent = complaint.id;
-                document.getElementById('resultDescription').textContent = complaint.description;
-                document.getElementById('resultDate').textContent = complaint.date;
-                document.getElementById('resultUpdate').textContent = complaint.update;
-                
-                const statusElement = document.getElementById('resultStatus');
-                statusElement.textContent = complaint.status.charAt(0).toUpperCase() + complaint.status.slice(1).replace('-', ' ');
-                statusElement.className = 'status status-' + complaint.status;
-                
-                resultDiv.classList.remove('hidden');
-            } else {
-                alert('Complaint ID not found. Please check your Complaint ID.');
-            }
-        }
-    </script>
+      document.getElementById('newComplaintId').textContent = json.complaint.id;
+      document.getElementById('successMessage').style.display = 'block';
+      this.reset();
+    } catch (err) {
+      alert('Network error.');
+    }
+  });
+
+  async function checkStatus() {
+    const trackingId = document.getElementById('trackingId').value.trim();
+    if (!trackingId) {
+      alert('Please enter a complaint ID');
+      return;
+    }
+    try {
+      const res = await fetch(`/api/complaints/${encodeURIComponent(trackingId)}`);
+      const json = await res.json();
+
+      if (!res.ok) {
+        alert(json.message || 'Complaint not found.');
+        return;
+      }
+
+      document.getElementById('resultId').textContent = json.complaint.id;
+      document.getElementById('resultDescription').textContent = json.complaint.description;
+      document.getElementById('resultDate').textContent = new Date(json.complaint.date).toLocaleDateString();
+      document.getElementById('resultUpdate').textContent = new Date(json.complaint.update).toLocaleDateString();
+      document.getElementById('resultStatus').textContent = json.complaint.status.charAt(0).toUpperCase() + json.complaint.status.slice(1);
+      document.getElementById('resultStatus').className = 'status status-' + json.complaint.status;
+
+      document.getElementById('statusResult').classList.remove('hidden');
+    } catch (err) {
+      alert('Network error.');
+    }
+  };
+
+  async function loadComplaints() {
+    try {
+      const res = await fetch('/api/complaints/all');
+      if (!res.ok) throw new Error('Failed to fetch complaints');
+      const complaints = await res.json();
+
+      const container = document.getElementById('allComplaints');
+      complaints.forEach(c => {
+        const card = document.createElement('div');
+        card.className = 'complaint-card';
+        card.innerHTML = `
+          <div class="complaint-header">
+            <span class="complaint-id">${c.id}</span>
+            <span class="status status-${c.status}">${c.status.charAt(0).toUpperCase() + c.status.slice(1)}</span>
+          </div>
+          <p>${c.description.slice(0, 100)}...</p>
+          <div class="complaint-details">
+            <p><strong>Submitted:</strong> ${new Date(c.date).toLocaleDateString()}</p>
+            <p><strong>Last Updated:</strong> ${new Date(c.update).toLocaleDateString()}</p>
+          </div>
+          <p><strong>Username:</strong> ${c.name}</p>
+        `;
+        container.appendChild(card);
+      });
+
+      document.body.appendChild(container);
+    } catch(err) {
+      console.error(err);
+    }
+  }
+
+  // Call on page load
+  loadComplaints();
+</script>
+
+</script>
 </body>
 </html>
