@@ -1,11 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Admin Dashboard - The Caravan Chronicle</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root{
+            --primary:#8B4513; --secondary:#D2691E; --accent:#FFD700; --dark:#3E2723; --danger:#F44336; --transition: all 0.3s ease;
+        }
+        *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        body{
+            background: linear-gradient(rgba(139,69,19,0.8), rgba(139,69,19,0.9)), url('https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size:cover; background-position:center; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;
+        }
+        .dashboard-card{
+            background:white;border-radius:22px;max-width:820px;width:100%;overflow:hidden;
+            box-shadow:0 15px 35px rgba(0,0,0,0.19); transition:var(--transition);padding:0;
+        }
+        .dashboard-header{
+            background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;
+            padding:30px 36px 22px 36px;display:flex;justify-content:space-between;align-items:center;
+            border-top-left-radius:22px;border-top-right-radius:22px;flex-wrap:wrap;
+        }
+        .dashboard-header-left{display:flex;align-items:center;}
+        .dashboard-header .logo i{font-size:2.0rem;color:var(--accent);margin-right:14px;}
+        .dashboard-header h1{font-size:2rem;margin:0;}
+        .header-actions{
+            display:flex;gap:17px;align-items:center;
+        }
+        .action-btn{
+            background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;
+            border:none;padding:11px 20px;border-radius:9px;font-weight:600;cursor:pointer;
+            display:flex;align-items:center;gap:8px;transition:var(--transition);
+        }
+        .action-btn i{font-size:1rem;}
+        .action-btn:hover{background:linear-gradient(135deg,var(--accent),var(--secondary));color:var(--dark);}
+        .logout-btn{
+            background:linear-gradient(135deg,var(--danger),var(--primary));color:#fff;
+            border:none;padding:11px 20px;border-radius:9px;cursor:pointer;font-weight:600;
+            transition:var(--transition);margin-left:25px;
+        }
+        .logout-btn:hover{background:linear-gradient(135deg,var(--danger),var(--secondary));}
+        .dashboard-section{background:#fff;padding:36px 30px;}
+        .dashboard-title{font-size:1.45rem;font-weight:600;margin-bottom:20px;color:var(--primary);}
+        .pending-list{display:flex;flex-direction:column;gap:14px;}
+        .staff-item{
+            background:#f8f9fa;border-radius:9px;box-shadow:0 2px 13px rgba(139,69,19,0.07);
+            padding:18px 22px; display:flex;justify-content:space-between;align-items:center;transition:var(--transition);
+        }
+        .staff-meta{font-size:1rem;}
+        .staff-details{color:var(--dark);margin-bottom:8px;font-weight:600;}
+        .staff-muted{color:var(--primary);font-size:0.95rem;}
+        .approval-actions{display:flex;gap:11px;}
+        .approve-btn, .reject-btn{
+            padding:8px 14px;border:none;border-radius:7px;font-weight:600;cursor:pointer;transition:var(--transition);}
+        .approve-btn{background:#52b788;color:white;}
+        .reject-btn{background:#da2c38;color:white;}
+        .approve-btn:hover{background:#318f4a;}
+        .reject-btn:hover{background:#930c26;}
+        .empty-note{color:var(--danger);padding:18px;text-align:center;}
+        @media(max-width:900px){
+            .dashboard-card{max-width:99vw;}
+            .dashboard-header, .dashboard-section{padding:15px 6vw;}
+            .dashboard-header h1{font-size:1.50rem;}
+        }
+    </style>
 </head>
 <body>
-    <h1>Dashboard</h1>
+    <div class="dashboard-card">
+        <div class="dashboard-header">
+            <div class="dashboard-header-left">
+                <span class="logo">
+                    <i class="fas fa-user-shield"></i>
+                </span>
+                <h1>The Caravan Chronicle - Admin</h1>
+            </div>
+            <div class="header-actions">
+                <button class="action-btn" onclick="window.location.href='admin-register.html'">
+                    <i class="fas fa-user-plus"></i> Register Admin
+                </button>
+                <button class="action-btn" onclick="window.location.href='staff-register.html'">
+                    <i class="fas fa-user-tag"></i> Register Staff
+                </button>
+                <button class="logout-btn" onclick="logoutAdmin()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+        <div class="dashboard-section">
+            <div class="dashboard-title">Pending Staff Approvals</div>
+            <div id="pendingList" class="pending-list"></div>
+            <div id="noPending" class="empty-note" style="display:none;">No pending staff registrations found.</div>
+        </div>
+    </div>
+    <script>
+        // Set admin email (customize as needed)
+        // document.getElementById('adminEmail').textContent = localStorage.getItem('adminEmail') || "Super Admin";
+
+        function logoutAdmin(){
+            // Example logout functionality
+            localStorage.removeItem('adminEmail');
+            window.location.href = "admin.html";
+        }
+
+        // Fetch and render pending staff registrations
+        async function fetchPendingStaff() {
+            try {
+                const res = await fetch('/api/staff/pending');
+                if (!res.ok) throw new Error('Failed to fetch');
+                const j = await res.json();
+                renderPendingStaff(j.pending || []);
+            } catch (err) {
+                document.getElementById('pendingList').innerHTML = '';
+                document.getElementById('noPending').textContent = "Could not load staff list.";
+                document.getElementById('noPending').style.display = "block";
+            }
+        }
+
+        function renderPendingStaff(arr) {
+            const list = document.getElementById('pendingList');
+            list.innerHTML = '';
+            if (!arr.length) {
+                document.getElementById('noPending').style.display = "block";
+                return;
+            }
+            document.getElementById('noPending').style.display = "none";
+            arr.forEach(staff => {
+                const item = document.createElement('div');
+                item.className = 'staff-item';
+                item.innerHTML = `
+                    <div class="staff-meta">
+                        <div class="staff-details">${staff.fullName || ''}</div>
+                        <div class="staff-muted">Email: ${staff.email || ''} &bull; Location: ${staff.location || ''}</div>
+                    </div>
+                    <div class="approval-actions">
+                        <button class="approve-btn">Approve</button>
+                        <button class="reject-btn">Reject</button>
+                    </div>
+                `;
+                item.querySelector('.approve-btn').onclick = () => approveStaff(staff.email);
+                item.querySelector('.reject-btn').onclick = () => rejectStaff(staff.email);
+                list.appendChild(item);
+            });
+        }
+
+        async function approveStaff(email) {
+            if (!confirm('Approve ' + email + '?')) return;
+            try {
+                const r = await fetch('/api/staff/approve', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                const j = await r.json();
+                if (!r.ok) return alert(j.message || 'Approve failed');
+                alert('Staff approved: ' + email);
+                fetchPendingStaff();
+            } catch (err) {
+                alert('Network error');
+            }
+        }
+
+        async function rejectStaff(email) {
+            if (!confirm('Reject staff ' + email + '?')) return;
+            try {
+                const r = await fetch('/api/staff/reject', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                if (r.ok) {
+                    alert('Staff rejected.');
+                    fetchPendingStaff();
+                    return;
+                }
+            } catch (err) {}
+            alert('Could not reject staff with email ' + email);
+        }
+
+        // Load on page
+        fetchPendingStaff();
+    </script>
 </body>
 </html>
