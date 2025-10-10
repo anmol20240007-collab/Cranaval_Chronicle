@@ -73,9 +73,6 @@
   }
   .main {
     margin-top: 20px;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 18px;
   }
   @media(min-width:900px) { .main { grid-template-columns: 1fr 420px; } }
   .panel {
@@ -188,7 +185,8 @@
       <i class="fas fa-tent"></i>
       <div>
         <h1>The Caravan Chronicle</h1>
-        <div style="font-size:0.9rem;color:#666">Staff Portal — Manage Complaints</div>
+        <h3>Welcome, <span id="staffFullName"></span></h3>
+        <div style="font-size:0.9rem;color:#666" id="email"></div>
       </div>
     </div>
     <div class="controls">
@@ -224,7 +222,7 @@
 </div>
 
 <script>
-  // Replace with backend API endpoint to fetch complaints (only registered in DB)
+  const email = localStorage.getItem('email');
   async function fetchComplaints() {
     try {
       const res = await fetch('/api/complaints/all'); // Assuming you have this GET endpoint
@@ -274,7 +272,7 @@
         <div class="meta"><strong>${escapeHtml(c.name)}</strong> • ${escapeHtml(c.email)}</div>
         <div class="desc">${escapeHtml(c.description.slice(0, 300))}</div>
         <div class="actions" style="margin-top:8px;">
-          <a href="update-complaint.html" class="detail-link">Details</a>
+          <a href="update-complaint.html?id=${encodeURIComponent(c.id)}&email=${encodeURIComponent(email)}" class="detail-link">Details</a>
         </div>`;
       complaintList.appendChild(card);
     });
@@ -286,6 +284,35 @@
 
   // Initial rendering
   renderComplaints();
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    const email = localStorage.getItem('email');
+    if (!email) {
+      window.location.href = 'staff-login.html'; // or appropriate redirect
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/staffportal', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ email })
+      });
+      const data = await res.json();
+
+      if (res.ok && data.ok) {
+        // Render full name somewhere in the DOM
+        document.getElementById('staffFullName').textContent = data.staff.fullName;
+        document.getElementById('email').textContent = data.staff.email;
+      } else {
+        // Optionally handle error
+        alert(data.message || 'Failed to load staff info');
+      }
+    } catch (err) {
+      alert('Network error when fetching staff info.');
+    }
+  });
+
 </script>
 </body>
 </html>

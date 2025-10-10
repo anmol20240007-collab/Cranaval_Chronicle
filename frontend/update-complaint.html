@@ -157,6 +157,16 @@
 </div>
 
 <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const complaintId = params.get('id');
+    const staffEmail = params.get('email');
+
+    if (complaintId) document.getElementById('complaintId').value = complaintId;
+    if (staffEmail) document.getElementById('staffEmail').value = staffEmail;
+    });
+
+    
     const form = document.getElementById('updateStatusForm');
     const errorBox = document.getElementById('errorMessage');
     const successBox = document.getElementById('successMessage');

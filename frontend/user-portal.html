@@ -103,6 +103,7 @@
         .success-message { background:#d4edda; color:#155724; padding:15px; border-radius:8px; margin-bottom:20px; border-left:4px solid var(--success); display:none;}
         #allComplaints { margin-top:25px; padding-top:20px; border-top:1px solid #e9ecef;}
         #allComplaints h3 { color:var(--primary); margin-bottom:15px; font-size:1.1rem; display:flex; align-items:center; gap:8px;}
+        .complaint-status{ margin-top: 20px;}
     </style>
 </head>
 <body>
@@ -160,27 +161,13 @@
     </div>
 
     <div class="complaint-status">
-      <h2 class="section-title"><i class="fas fa-search"></i> Check Complaint Status</h2>
-      <div class="status-check">
-        <input type="text" id="trackingId" placeholder="Enter Complaint ID (e.g., TC-2024-001)">
-        <button class="check-btn" onclick="checkStatus()"><i class="fas fa-search"></i> Check</button>
-      </div>
-      <div id="statusResult" class="hidden">
-        <div class="complaint-card">
-          <div class="complaint-header">
-            <span class="complaint-id" id="resultId"></span>
-            <span class="status" id="resultStatus"></span>
-          </div>
-          <div class="complaint-details">
-            <p><strong>Description:</strong> <span id="resultDescription"></span></p>
-            <p><strong>Submitted:</strong> <span id="resultDate"></span></p>
-            <p><strong>Last Updated:</strong> <span id="resultUpdate"></span></p>
-          </div>
-        </div>
-      </div>
-      <div id="allComplaints">
-      </div>
+      <h2 class="section-title"></i>My Complaints</h2>
+      <div id="userComplaints"></div>
     </div>
+  </div>
+  <div class="complaint-status">
+    <h2 class="section-title"></i>All Complaints</h2>
+    <div id="allComplaints"></div>
   </div>
 </div>
 
@@ -221,34 +208,6 @@
     }
   });
 
-  async function checkStatus() {
-    const trackingId = document.getElementById('trackingId').value.trim();
-    if (!trackingId) {
-      alert('Please enter a complaint ID');
-      return;
-    }
-    try {
-      const res = await fetch(`/api/complaints/${encodeURIComponent(trackingId)}`);
-      const json = await res.json();
-
-      if (!res.ok) {
-        alert(json.message || 'Complaint not found.');
-        return;
-      }
-
-      document.getElementById('resultId').textContent = json.complaint.id;
-      document.getElementById('resultDescription').textContent = json.complaint.description;
-      document.getElementById('resultDate').textContent = new Date(json.complaint.date).toLocaleDateString();
-      document.getElementById('resultUpdate').textContent = new Date(json.complaint.update).toLocaleDateString();
-      document.getElementById('resultStatus').textContent = json.complaint.status.charAt(0).toUpperCase() + json.complaint.status.slice(1);
-      document.getElementById('resultStatus').className = 'status status-' + json.complaint.status;
-
-      document.getElementById('statusResult').classList.remove('hidden');
-    } catch (err) {
-      alert('Network error.');
-    }
-  };
-
   async function loadComplaints() {
     try {
       const res = await fetch('/api/complaints/all');
@@ -256,6 +215,7 @@
       const complaints = await res.json();
 
       const container = document.getElementById('allComplaints');
+      container.innerHTML = '';
       complaints.forEach(c => {
         const card = document.createElement('div');
         card.className = 'complaint-card';
@@ -264,7 +224,7 @@
             <span class="complaint-id">${c.id}</span>
             <span class="status status-${c.status}">${c.status.charAt(0).toUpperCase() + c.status.slice(1)}</span>
           </div>
-          <p>${c.description.slice(0, 100)}...</p>
+          <p>${c.description.length > 100 ? c.description.slice(0, 100) + '...' : c.description}</p>
           <div class="complaint-details">
             <p><strong>Submitted:</strong> ${new Date(c.date).toLocaleDateString()}</p>
             <p><strong>Last Updated:</strong> ${new Date(c.update).toLocaleDateString()}</p>
@@ -273,17 +233,68 @@
         `;
         container.appendChild(card);
       });
-
-      document.body.appendChild(container);
     } catch(err) {
       console.error(err);
     }
   }
+  function renderComplaints(complaints) {
+    const container = document.getElementById('userComplaints');
+    container.innerHTML = ''; // Clear any existing content
+
+    complaints.forEach(c => {
+      const card = document.createElement('div');
+      card.className = 'complaint-card';
+      card.innerHTML = `
+        <div class="complaint-header">
+          <span class="complaint-id">${c.id}</span>
+          <span class="status status-${c.status}">
+            ${c.status.charAt(0).toUpperCase() + c.status.slice(1)}
+          </span>
+        </div>
+        <p>${c.description.length > 100 ? c.description.slice(0, 100) + '...' : c.description}</p>
+        <div class="complaint-details">
+          <p><strong>Submitted:</strong> ${new Date(c.date).toLocaleDateString()}</p>
+          <p><strong>Last Updated:</strong> ${new Date(c.update).toLocaleDateString()}</p>
+        </div>
+        <p><strong>Username:</strong> ${c.name}</p>
+      `;
+      container.appendChild(card);
+    });
+  }
+  function renderUser(user) {
+      document.getElementById('name').value = user.fullName;
+      document.getElementById('email').value = user.email;
+      document.getElementById('location').value = user.location;
+      // Update other fields if needed
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const email = localStorage.getItem('email');
+      if (!email) {
+        window.location.href = 'login.html';
+        return;
+      }
+      try {
+        const response = await fetch('/api/userportal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await response.json();
+        if (response.ok && data.ok) {
+          renderUser(data.user);
+          renderComplaints(data.complaints);
+        } else {
+          // Handle error
+        }
+      } catch (err) {
+        // Handle server error
+      }
+    });
+
 
   // Call on page load
   loadComplaints();
-</script>
-
 </script>
 </body>
 </html>

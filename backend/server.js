@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config(); 
 
-const { register, userLogin, staffLogin, staffPending, staffApprove, registerAdmin, loginAdmin, registerComplaint, updateComplaint, getComplaints } = require('./router/auth');
+const { register, userLogin, userPortal, staffLogin, staffPortal,staffPending, staffApprove, registerAdmin, loginAdmin, registerComplaint, updateComplaint, getComplaints } = require('./router/auth');
 const { get } = require('http');
 
 const app = express();
@@ -23,7 +23,9 @@ app.use('/', express.static(path.join(__dirname, '..', 'frontend')));
 // Define API routes on router
 router.post('/api/register', register);
 router.post('/api/login', userLogin);
+router.post('/api/userportal', userPortal);
 router.post('/api/staff/login', staffLogin);
+router.post('/api/staffportal', staffPortal);
 router.get('/api/staff/pending', staffPending);
 router.post('/api/staff/approve', staffApprove);
 router.post('/api/admin/register', registerAdmin);
