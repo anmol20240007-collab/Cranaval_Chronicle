@@ -271,9 +271,13 @@
         </div>
         <div class="meta"><strong>${escapeHtml(c.name)}</strong> • ${escapeHtml(c.email)}</div>
         <div class="desc">${escapeHtml(c.description.slice(0, 300))}</div>
-        <div class="actions" style="margin-top:8px;">
+        <div class="actions" style="margin-top:8px; align-items: center; gap: 10px; display: flex;">
           <a href="update-complaint.html?id=${encodeURIComponent(c.id)}&email=${encodeURIComponent(email)}" class="detail-link">Details</a>
-        </div>`;
+          ${
+            c.image ? `<a href="${encodeURIComponent(c.image)}" class="detail-link" target="_blank" rel="noopener noreferrer">View Image</a>` : ''
+          }
+        </div>
+        `;
       complaintList.appendChild(card);
     });
   }
@@ -299,6 +303,8 @@
         body: JSON.stringify({ email })
       });
       const data = await res.json();
+
+      console.log(data);
 
       if (res.ok && data.ok) {
         // Render full name somewhere in the DOM

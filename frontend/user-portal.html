@@ -156,6 +156,10 @@
           <label for="description"><i class="fas fa-comment"></i> Complaint Description</label>
           <textarea id="description" name="description" rows="5" required placeholder="Please describe your complaint in detail..."></textarea>
         </div>
+        <div class="form-group">
+          <label for="image"><i class="fas fa-image"></i> Upload Image (optional)</label>
+          <input type="file" id="image" name="image" accept="image/*">
+        </div>
         <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Submit Complaint</button>
       </form>
     </div>
@@ -179,19 +183,12 @@
   document.getElementById('complaintForm').addEventListener('submit', async function(e) {
     e.preventDefault();
 
-    const formData = {
-      name: document.getElementById('name').value.trim(),
-      email: document.getElementById('email').value.trim(),
-      location: document.getElementById('location').value.trim(),
-      urgency: document.getElementById('urgency').value,
-      description: document.getElementById('description').value.trim()
-    };
+    const formData = new FormData(document.getElementById('complaintForm'));
 
     try {
       const res = await fetch('/api/complaints/register', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(formData)
+        body: (formData)
       });
       const json = await res.json();
 
@@ -222,7 +219,9 @@
         card.innerHTML = `
           <div class="complaint-header">
             <span class="complaint-id">${c.id}</span>
-            <span class="status status-${c.status}">${c.status.charAt(0).toUpperCase() + c.status.slice(1)}</span>
+            <span class="status status-${c.status}">
+              ${c.status.charAt(0).toUpperCase() + c.status.slice(1)}
+            </span>
           </div>
           <p>${c.description.length > 100 ? c.description.slice(0, 100) + '...' : c.description}</p>
           <div class="complaint-details">
@@ -230,6 +229,10 @@
             <p><strong>Last Updated:</strong> ${new Date(c.update).toLocaleDateString()}</p>
           </div>
           <p><strong>Username:</strong> ${c.name}</p>
+
+          <div style="margin-top: 10px;">
+            ${c.image ? `<a href="${c.image}" target="_blank" rel="noopener noreferrer">View Image</a>` : ''}
+          </div>
         `;
         container.appendChild(card);
       });
@@ -257,17 +260,22 @@
           <p><strong>Last Updated:</strong> ${new Date(c.update).toLocaleDateString()}</p>
         </div>
         <p><strong>Username:</strong> ${c.name}</p>
+
+        <div style="margin-top: 10px;">
+          ${c.image ? `<a href="${c.image}" target="_blank" rel="noopener noreferrer">View Image</a>` : ''}
+        </div>
       `;
       container.appendChild(card);
     });
   }
   function renderUser(user) {
+      console.log(user);
       const fullName = document.getElementById('name');
-      fullName.value = user.name;
-      fullName.disabled = true;
+      fullName.value = user.fullName;
+      fullName.readOnly = true;
       const email = document.getElementById('email');
       email.value = user.email;
-      email.disabled = true;
+      email.readOnly = true;
       const location = document.getElementById('location');
       document.getElementById('location').value = user.location;
     }

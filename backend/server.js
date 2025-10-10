@@ -10,6 +10,7 @@ const { register, userLogin, staffLogin} = require('./router/auth');
 const { userPortal,staffPortal } = require('./router/portals');
 const { getComplaints, registerComplaint, updateComplaint } = require('./router/complaints');
 const { staffPending, staffApprove } = require('./router/staff');
+const upload = require('./middleware/upload');
 
 const app = express();
 app.use(cors());
@@ -22,6 +23,10 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 
 // Serve frontend static files
 app.use('/', express.static(path.join(__dirname, '..', 'frontend')));
+app.use('/uploads', express.static(path.join(__dirname, 'middleware', 'uploads')));
+console.log(path.join(__dirname, 'middleware', 'uploads'));
+console.log(path.join(__dirname, '..', 'frontend'));
+
 
 // Define API routes on router
 router.post('/api/register', register);
@@ -33,7 +38,7 @@ router.get('/api/staff/pending', staffPending);
 router.post('/api/staff/approve', staffApprove);
 router.post('/api/admin/register', registerAdmin);
 router.post('/api/admin/login', loginAdmin);
-router.post('/api/complaints/register', registerComplaint);
+router.post('/api/complaints/register', upload.single('image'), registerComplaint);
 router.post('/api/complaints/update-status', updateComplaint);
 router.get('/api/complaints/all', getComplaints);
 
