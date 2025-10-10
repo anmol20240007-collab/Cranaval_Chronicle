@@ -79,6 +79,17 @@
     </div>
 
     <script>
+
+        window.addEventListener('DOMContentLoaded', () => {
+        const params = new URLSearchParams(window.location.search);
+        const requesterEmail = params.get('email');
+        if (requesterEmail) {
+            const emailInput = document.getElementById('requesterEmail');
+            emailInput.value = requesterEmail;
+            emailInput.disabled = true; 
+        }
+        });
+
         const form = document.getElementById('adminRegisterForm');
         const errorBox = document.getElementById('errorBox');
         const successBox = document.getElementById('successBox');

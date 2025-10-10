@@ -14,7 +14,7 @@ const ComplaintSchema = new mongoose.Schema({
     urgency: { 
         type: String, 
         enum: ['least', 'lesser', 'normal', 'more', 'most'], 
-        required: true 
+        required: false 
     },
     description: { type: String, required: true },
     status: { 

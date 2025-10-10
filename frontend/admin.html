@@ -100,7 +100,9 @@
                     return;
                 }
                 showSuccess('Login successful!');
-                setTimeout(()=>{ window.location.href = 'admin-dashboard.html'; }, 1200);
+                setTimeout(()=>{ 
+                    window.location.href = `admin-dashboard.html?email=${encodeURIComponent(email)}`;
+                }, 1200);
             } catch (err) {
                 showError('Network error');
             }

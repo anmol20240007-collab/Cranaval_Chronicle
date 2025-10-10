@@ -262,10 +262,14 @@
     });
   }
   function renderUser(user) {
-      document.getElementById('name').value = user.fullName;
-      document.getElementById('email').value = user.email;
+      const fullName = document.getElementById('name');
+      fullName.value = user.name;
+      fullName.disabled = true;
+      const email = document.getElementById('email');
+      email.value = user.email;
+      email.disabled = true;
+      const location = document.getElementById('location');
       document.getElementById('location').value = user.location;
-      // Update other fields if needed
     }
 
     document.addEventListener('DOMContentLoaded', async () => {

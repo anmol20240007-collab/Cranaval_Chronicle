@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root{
-            --primary:#8B4513; --secondary:#D2691E; --accent:#FFD700; --dark:#3E2723; --danger:#F44336; --transition: all 0.3s ease;
+            --primary:#8B4513; --secondary:#D2691E; --accent:#FFD700; --dark:#3E2723; --danger:#F44336; --transition: all 0.3s ease; --logout: #9b5c2f;
         }
         *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
         body{
@@ -27,21 +27,21 @@
         .dashboard-header .logo i{font-size:2.0rem;color:var(--accent);margin-right:14px;}
         .dashboard-header h1{font-size:2rem;margin:0;}
         .header-actions{
-            display:flex;gap:17px;align-items:center;
+            display:flex;gap:17px;align-items:center; justify-content: space-between; width: 100%;
         }
         .action-btn{
-            background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;
+            background:var(--secondary);color:white;
             border:none;padding:11px 20px;border-radius:9px;font-weight:600;cursor:pointer;
             display:flex;align-items:center;gap:8px;transition:var(--transition);
         }
         .action-btn i{font-size:1rem;}
-        .action-btn:hover{background:linear-gradient(135deg,var(--accent),var(--secondary));color:var(--dark);}
+        .action-btn:hover{background:var(--secondary);transform:translateY(-2px);}
         .logout-btn{
-            background:linear-gradient(135deg,var(--danger),var(--primary));color:#fff;
+            background:var(--logout);color:#fff;
             border:none;padding:11px 20px;border-radius:9px;cursor:pointer;font-weight:600;
             transition:var(--transition);margin-left:25px;
         }
-        .logout-btn:hover{background:linear-gradient(135deg,var(--danger),var(--secondary));}
+        .logout-btn:hover{background:var(--primary); transform:translateY(-2px);}
         .dashboard-section{background:#fff;padding:36px 30px;}
         .dashboard-title{font-size:1.45rem;font-weight:600;margin-bottom:20px;color:var(--primary);}
         .pending-list{display:flex;flex-direction:column;gap:14px;}
@@ -65,6 +65,17 @@
             .dashboard-header, .dashboard-section{padding:15px 6vw;}
             .dashboard-header h1{font-size:1.50rem;}
         }
+        #header {
+            display: flex;
+            gap: 3.5px;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+        .admin-email {
+            font-weight: 600;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -74,18 +85,25 @@
                 <span class="logo">
                     <i class="fas fa-user-shield"></i>
                 </span>
-                <h1>The Caravan Chronicle - Admin</h1>
+                <div id="header">
+                    <h1>The Caravan Chronicle - Admin</h1>
+                    <div><span id="adminEmail" class="admin-email"></span></div>
+                </div>
             </div>
             <div class="header-actions">
-                <button class="action-btn" onclick="window.location.href='admin-register.html'">
-                    <i class="fas fa-user-plus"></i> Register Admin
-                </button>
-                <button class="action-btn" onclick="window.location.href='staff-register.html'">
-                    <i class="fas fa-user-tag"></i> Register Staff
-                </button>
-                <button class="logout-btn" onclick="logoutAdmin()">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
+                <div style="display: flex; gap: 10px;">
+                    <button class="action-btn" onclick="window.location.href='admin-register.html'">
+                        <i class="fas fa-user-plus"></i> Register Admin
+                    </button>
+                    <button class="action-btn" onclick="window.location.href='register.html'">
+                        <i class="fas fa-user-tag"></i> Register Staff
+                    </button>
+                </div>
+                <div>
+                    <button class="logout-btn" onclick="logoutAdmin()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
             </div>
         </div>
         <div class="dashboard-section">
@@ -97,7 +115,13 @@
     <script>
         // Set admin email (customize as needed)
         // document.getElementById('adminEmail').textContent = localStorage.getItem('adminEmail') || "Super Admin";
+        const params = new URLSearchParams(window.location.search);
+        const adminEmail = params.get('email');
+        if (adminEmail) document.getElementById('adminEmail').textContent = adminEmail;
+        console.log(adminEmail);
 
+        document.querySelector(".action-btn[onclick*='admin-register.html']").setAttribute("onclick",
+        `window.location.href='admin-register.html?email=${encodeURIComponent(adminEmail)}'`);
         function logoutAdmin(){
             // Example logout functionality
             localStorage.removeItem('adminEmail');

@@ -158,12 +158,20 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-    const params = new URLSearchParams(window.location.search);
-    const complaintId = params.get('id');
-    const staffEmail = params.get('email');
+        const params = new URLSearchParams(window.location.search);
+        const complaintId = params.get('id');
+        const staffEmail = params.get('email');
 
-    if (complaintId) document.getElementById('complaintId').value = complaintId;
-    if (staffEmail) document.getElementById('staffEmail').value = staffEmail;
+        if (complaintId) {
+        const complaintInput = document.getElementById('complaintId');
+        complaintInput.value = complaintId;
+        complaintInput.disabled = true;
+        }
+        if (staffEmail) {
+        const staffEmailInput = document.getElementById('staffEmail');
+        staffEmailInput.value = staffEmail;
+        staffEmailInput.disabled = true;
+        }
     });
 
     
@@ -220,6 +228,7 @@
             }
             showSuccess('Complaint status updated successfully.');
             form.reset();
+            window.location.href = 'staff-portal.html';
         } catch (err) {
             showError('Network error.');
         }
