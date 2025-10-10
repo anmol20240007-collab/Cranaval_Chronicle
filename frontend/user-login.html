@@ -6,7 +6,6 @@
     <title>User Login - The Caravan Chronicle</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* CSS Variables */
         :root {
             --primary: #8B4513;
             --secondary: #D2691E;
@@ -314,7 +313,6 @@
                 const data = await response.json();
 
                 if (response.ok && data.ok) {
-                    // Store token or login state as needed
                     localStorage.setItem('userLoggedIn', 'true');
                     localStorage.setItem('email', email);
                     window.location.href = 'user-portal.html';
@@ -330,7 +328,6 @@
             }
         });
 
-        // Clear error message when user starts typing
         emailInput.addEventListener('input', function() {
             errorMessage.style.display = 'none';
         });
@@ -339,7 +336,6 @@
             errorMessage.style.display = 'none';
         });
 
-        // Add shake animation
         const style = document.createElement('style');
         style.textContent = `
             @keyframes shake {

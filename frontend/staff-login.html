@@ -6,7 +6,7 @@
     <title>Staff Login - The Caravan Chronicle</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* CSS Variables */
+
         :root {
             --primary: #8B4513;
             --secondary: #D2691E;
@@ -312,7 +312,7 @@
                     setTimeout(()=> this.style.animation = '', 500);
                     return;
                 }
-                // success: server returned user object
+
                 localStorage.setItem('staffLoggedIn', 'true');
                 localStorage.setItem('email', j.user.email || email);
                 window.location.href = 'staff-portal.html';
@@ -322,7 +322,6 @@
             }
         });
 
-        // Clear error message when user starts typing
         document.getElementById('email').addEventListener('input', function() {
             document.getElementById('errorMessage').style.display = 'none';
         });
@@ -331,7 +330,6 @@
             document.getElementById('errorMessage').style.display = 'none';
         });
 
-        // Add shake animation
         const style = document.createElement('style');
         style.textContent = `
             @keyframes shake {

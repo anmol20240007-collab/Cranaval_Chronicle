@@ -201,7 +201,6 @@
             return;
         }
 
-        // Validate allowed status transitions based on previous status from backend
         try {
             const checkRes = await fetch(`/api/complaints/all`);
             if (!checkRes.ok) {
@@ -214,7 +213,6 @@
             return;
         }
 
-        // Send update request
         try {
             const res = await fetch('/api/complaints/update-status', {
                 method: 'POST',

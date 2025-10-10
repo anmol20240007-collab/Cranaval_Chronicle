@@ -159,10 +159,10 @@
             }
         });
 
-        // Clear messages on input
         Array.from(document.querySelectorAll('#registerForm input, #registerForm select')).forEach(el=>{
             el.addEventListener('input', ()=>{ errorBox.style.display='none'; successBox.style.display='none'; });
         });
+        
     </script>
 </body>
 </html>

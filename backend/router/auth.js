@@ -66,7 +66,6 @@ const staffLogin = async (req, res) => {
         const user = await User.findOne({ email: email, role: 'staff' });
         if (!user) return res.status(401).json({ ok: false, message: 'Invalid credentials' });
 
-        // block login if not approved
         if (!user.approved) {
             return res.status(403).json({ ok: false, message: 'Account awaiting admin approval' });
         }

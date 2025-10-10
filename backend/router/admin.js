@@ -3,10 +3,9 @@ const Admin = require('../models/Admin');
 
 const registerAdmin = async (req, res) => {
     try {
-        // These credentials belong to the requesting (existing) admin
+
         const { requesterEmail, requesterPassword, newAdminEmail, newAdminPassword } = req.body;
 
-        // Validate all fields are present and string
         if (!requesterEmail || !requesterPassword || !newAdminEmail || !newAdminPassword) {
             return res.status(400).json({ ok: false, message: 'All fields are required' });
         }
@@ -19,7 +18,7 @@ const registerAdmin = async (req, res) => {
             return res.status(400).json({ ok: false, message: 'All fields must be strings' });
         }
 
-        // Authenticate the requester's credentials
+
         const lowerRequesterEmail = requesterEmail.toLowerCase();
         const requestingAdmin = await Admin.findOne({ email: lowerRequesterEmail });
         if (!requestingAdmin) {
@@ -30,19 +29,17 @@ const registerAdmin = async (req, res) => {
             return res.status(403).json({ ok: false, message: 'Invalid requester admin password' });
         }
 
-        // Check if new admin already exists
+
         const lowerNewEmail = newAdminEmail.toLowerCase();
         const exists = await Admin.findOne({ email: lowerNewEmail });
         if (exists) {
             return res.status(409).json({ ok: false, message: 'New admin email already registered' });
         }
 
-        // Register the new admin
         const newAdminHash = await bcrypt.hash(newAdminPassword, 10);
         const newAdmin = new Admin({ email: lowerNewEmail, password: newAdminHash });
         await newAdmin.save();
 
-        // Optionally, log who registered whom
         console.log(`Admin (${lowerRequesterEmail}) registered a new admin (${lowerNewEmail})`);
 
         return res.json({ ok: true, message: 'New admin registered successfully', email: lowerNewEmail });

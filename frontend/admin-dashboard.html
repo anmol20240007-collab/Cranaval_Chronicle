@@ -15,7 +15,7 @@
             background-size:cover; background-position:center; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;
         }
         .dashboard-card{
-            background:white;border-radius:22px;max-width:820px;width:100%;overflow:hidden;
+            background:white;border-radius:22px;max-width:1200px;width:100%;overflow:hidden;
             box-shadow:0 15px 35px rgba(0,0,0,0.19); transition:var(--transition);padding:0;
         }
         .dashboard-header{
@@ -98,6 +98,12 @@
                     <button class="action-btn" onclick="window.location.href='register.html'">
                         <i class="fas fa-user-tag"></i> Register Staff
                     </button>
+                    <button class="action-btn" id="exportCSVBtn">
+                        <i class="fas fa-file-csv"></i> Export Complaints CSV
+                    </button>
+                    <button class="action-btn" id="exportPDFBtn">
+                        <i class="fas fa-file-pdf"></i> Export Complaints PDF
+                    </button>
                 </div>
                 <div>
                     <button class="logout-btn" onclick="logoutAdmin()">
@@ -113,22 +119,17 @@
         </div>
     </div>
     <script>
-        // Set admin email (customize as needed)
-        // document.getElementById('adminEmail').textContent = localStorage.getItem('adminEmail') || "Super Admin";
         const params = new URLSearchParams(window.location.search);
         const adminEmail = params.get('email');
         if (adminEmail) document.getElementById('adminEmail').textContent = adminEmail;
-        console.log(adminEmail);
 
         document.querySelector(".action-btn[onclick*='admin-register.html']").setAttribute("onclick",
         `window.location.href='admin-register.html?email=${encodeURIComponent(adminEmail)}'`);
         function logoutAdmin(){
-            // Example logout functionality
             localStorage.removeItem('adminEmail');
             window.location.href = "admin.html";
         }
 
-        // Fetch and render pending staff registrations
         async function fetchPendingStaff() {
             try {
                 const res = await fetch('/api/staff/pending');
@@ -203,7 +204,42 @@
             alert('Could not reject staff with email ' + email);
         }
 
-        // Load on page
+        document.getElementById('exportCSVBtn').addEventListener('click', async () => {
+            try {
+               const response = await fetch('/api/export/complaints/csv', { method: 'GET' });
+                if (!response.ok) throw new Error('Failed to download CSV');
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'complaints.csv';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            } catch (err) {
+                alert(err.message);
+            }
+        });
+
+        document.getElementById('exportPDFBtn').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/export/complaints/pdf', { method: 'GET' });
+                if (!response.ok) throw new Error('Failed to download PDF');
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'complaints.pdf';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            } catch (err) {
+             alert(err.message);
+            }
+        });
+
         fetchPendingStaff();
     </script>
 </body>

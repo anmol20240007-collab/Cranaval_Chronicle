@@ -225,7 +225,7 @@
   const email = localStorage.getItem('email');
   async function fetchComplaints() {
     try {
-      const res = await fetch('/api/complaints/all'); // Assuming you have this GET endpoint
+      const res = await fetch('/api/complaints/all');
       if (!res.ok) throw new Error('Failed to fetch complaints');
       return await res.json();
     } catch (err) {
@@ -238,7 +238,6 @@
     return text.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]);
   }
 
-  // Render complaints in list
   async function renderComplaints() {
     const complaintList = document.getElementById('complaintList');
     const emptyMsg = document.getElementById('emptyMsg');
@@ -249,8 +248,8 @@
     const data = await fetchComplaints();
 
     const filtered = data.filter(c => {
-      if (filter && c.status !== filter) return false;         // status filter
-      if (urgencyFilterValue && c.urgency !== urgencyFilterValue) return false;  // urgency filter
+      if (filter && c.status !== filter) return false;        
+      if (urgencyFilterValue && c.urgency !== urgencyFilterValue) return false;  
       if (!query) return true;
       return c.id.toLowerCase().includes(query) || c.name.toLowerCase().includes(query);
     });
@@ -273,9 +272,7 @@
         <div class="desc">${escapeHtml(c.description.slice(0, 300))}</div>
         <div class="actions" style="margin-top:8px; align-items: center; gap: 10px; display: flex;">
           <a href="update-complaint.html?id=${encodeURIComponent(c.id)}&email=${encodeURIComponent(email)}" class="detail-link">Details</a>
-          ${
-            c.image ? `<a href="${encodeURIComponent(c.image)}" class="detail-link" target="_blank" rel="noopener noreferrer">View Image</a>` : ''
-          }
+          ${ c.image ? `<a href="${c.image}" class="detail-link" target="_blank" rel="noopener noreferrer">View Image</a>` : '' }
         </div>
         `;
       complaintList.appendChild(card);
@@ -286,13 +283,12 @@
   document.getElementById('statusFilter').addEventListener('change', renderComplaints);
   document.getElementById('urgencyFilter').addEventListener('change', renderComplaints);
 
-  // Initial rendering
   renderComplaints();
 
   document.addEventListener('DOMContentLoaded', async () => {
     const email = localStorage.getItem('email');
     if (!email) {
-      window.location.href = 'staff-login.html'; // or appropriate redirect
+      window.location.href = 'staff-login.html';
       return;
     }
 
@@ -307,11 +303,10 @@
       console.log(data);
 
       if (res.ok && data.ok) {
-        // Render full name somewhere in the DOM
+
         document.getElementById('staffFullName').textContent = data.staff.fullName;
         document.getElementById('email').textContent = data.staff.email;
       } else {
-        // Optionally handle error
         alert(data.message || 'Failed to load staff info');
       }
     } catch (err) {

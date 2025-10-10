@@ -13,8 +13,6 @@ const getComplaints = async (req, res) => {
 };
 
 const registerComplaint = async (req, res) => {
-    console.log(req.body);    // see all text fields
-    console.log(req.file);    // see the uploaded image if present
 
   try {
     const { name, email, location, urgency, description } = req.body;
@@ -32,7 +30,7 @@ const registerComplaint = async (req, res) => {
 
     let imagePath = null;
     if (req.file) {
-      imagePath = req.file.path;
+    imagePath = '/uploads/' + req.file.filename; 
     }
 
     const complaint = new Complaint({ id, name, email, location, urgency, description, image: imagePath });

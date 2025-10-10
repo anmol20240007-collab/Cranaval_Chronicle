@@ -83,10 +83,12 @@
         window.addEventListener('DOMContentLoaded', () => {
         const params = new URLSearchParams(window.location.search);
         const requesterEmail = params.get('email');
+
+        
         if (requesterEmail) {
             const emailInput = document.getElementById('requesterEmail');
             emailInput.value = requesterEmail;
-            emailInput.disabled = true; 
+            emailInput.readOnly = true; 
         }
         });
 
@@ -113,7 +115,6 @@
             const newAdminEmail = document.getElementById('newAdminEmail').value.trim();
             const newAdminPassword = document.getElementById('newAdminPassword').value;
 
-            // Basic validation
             if(!requesterEmail || !requesterPassword || !newAdminEmail || !newAdminPassword){
                 showError('All fields are required.');
                 this.style.animation = 'shake 0.5s ease-in-out';
@@ -121,7 +122,6 @@
                 return;
             }
 
-            // Email format simple check
             const emailRE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if(!emailRE.test(requesterEmail) || !emailRE.test(newAdminEmail)){
                 showError('Please enter valid email addresses.');
@@ -129,7 +129,7 @@
             }
 
             if(newAdminPassword.length < 6){
-                showError('New admin password must be at least 6 characters.');
+                showError('Password must be at least 6 characters.');
                 return;
             }
 
@@ -154,7 +154,6 @@
             }
         });
 
-        // Hide messages on input
         Array.from(document.querySelectorAll('#adminRegisterForm input')).forEach(el => {
             el.addEventListener('input', () => {
                 errorBox.style.display='none';

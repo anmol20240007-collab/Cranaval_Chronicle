@@ -242,7 +242,7 @@
   }
   function renderComplaints(complaints) {
     const container = document.getElementById('userComplaints');
-    container.innerHTML = ''; // Clear any existing content
+    container.innerHTML = ''; 
 
     complaints.forEach(c => {
       const card = document.createElement('div');
@@ -297,15 +297,13 @@
           renderUser(data.user);
           renderComplaints(data.complaints);
         } else {
-          // Handle error
+          alert(data.message || 'Failed to load user info');
         }
       } catch (err) {
-        // Handle server error
+        alert('Network error');
       }
     });
 
-
-  // Call on page load
   loadComplaints();
 </script>
 </body>

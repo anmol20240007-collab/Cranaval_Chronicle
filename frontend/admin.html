@@ -73,6 +73,8 @@
             successBox.textContent = message;
             successBox.style.display = 'block';
         }
+
+
         form.addEventListener('submit', async function(e){
             e.preventDefault();
             const email = document.getElementById('email').value.trim();
@@ -107,6 +109,8 @@
                 showError('Network error');
             }
         });
+
+        
         Array.from(document.querySelectorAll('#adminLoginForm input')).forEach(el=>{
             el.addEventListener('input', ()=>{ errorBox.style.display='none'; successBox.style.display='none'; });
         });

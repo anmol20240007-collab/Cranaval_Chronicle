@@ -6,7 +6,7 @@ const UserSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     location: { type: String, required: true },
     password: { type: String, required: true },
-    approved: { type: Boolean, default: false }, // admins must approve staff
+    approved: { type: Boolean, default: false }, 
     createdAt: { type: Date, default: Date.now }
 });
 
