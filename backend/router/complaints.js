@@ -1,5 +1,5 @@
 const Complaint = require('../models/Complaint');
-const User = require('../models/user');
+const User = require('../models/User');
 const { nanoid } = require('nanoid');
 
 const getComplaints = async (req, res) => {
