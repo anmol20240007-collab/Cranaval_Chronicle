@@ -5,8 +5,11 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config(); 
 
-const { register, userLogin, userPortal, staffLogin, staffPortal,staffPending, staffApprove, registerAdmin, loginAdmin, registerComplaint, updateComplaint, getComplaints } = require('./router/auth');
-const { get } = require('http');
+const { registerAdmin, loginAdmin } = require('./router/admin');
+const { register, userLogin, staffLogin} = require('./router/auth');
+const { userPortal,staffPortal } = require('./router/portals');
+const { getComplaints, registerComplaint, updateComplaint } = require('./router/complaints');
+const { staffPending, staffApprove } = require('./router/staff');
 
 const app = express();
 app.use(cors());
