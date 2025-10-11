@@ -37,3 +37,7 @@ Follow these steps to run the project locally:
 --> clone the repository and install all the dependencies 
 --> run the command : node server.js
 --> open site at http://localhost:3000
+
+## ⚙️ Deployed on Vercel
+
+https://cranaval-chronicle.vercel.app/
