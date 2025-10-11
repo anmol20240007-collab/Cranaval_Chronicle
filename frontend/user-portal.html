@@ -186,7 +186,7 @@
     const formData = new FormData(document.getElementById('complaintForm'));
 
     try {
-      const res = await fetch('/api/complaints/register', {
+      const res = await fetch('https://cranaval-chronicle.vercel.app/api/complaints/register', {
         method: 'POST',
         body: (formData)
       });
@@ -207,7 +207,7 @@
 
   async function loadComplaints() {
     try {
-      const res = await fetch('/api/complaints/all');
+      const res = await fetch('https://cranaval-chronicle.vercel.app/api/complaints/all');
       if (!res.ok) throw new Error('Failed to fetch complaints');
       const complaints = await res.json();
 
