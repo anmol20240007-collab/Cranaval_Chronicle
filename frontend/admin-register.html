@@ -147,8 +147,11 @@
                     return;
                 }
                 showSuccess('New admin registered successfully: ' + (j.email || ''));
-                setTimeout(()=>{ window.location.href = 'admin-dashboard.html'; }, 1200);
-                form.reset();
+                const emailToUse =  requesterEmail;
+                if(!emailToUse) emailToUse = newAdminEmail;
+                setTimeout(() => {
+                    window.location.href = `admin-dashboard.html?email=${encodeURIComponent(emailToUse)}`;
+                }, 1200);
             } catch(err){
                 showError('Network error');
             }

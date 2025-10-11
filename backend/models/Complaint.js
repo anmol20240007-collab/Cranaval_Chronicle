@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const StatusHistorySchema = new mongoose.Schema({
     status: { type: String, enum: ['pending', 'in-progress', 'resolved', 'cancelled'], required: true },
@@ -28,4 +28,4 @@ const ComplaintSchema = new mongoose.Schema({
     update: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('Complaint', ComplaintSchema);
+export default mongoose.model('Complaint', ComplaintSchema);

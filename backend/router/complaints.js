@@ -1,6 +1,6 @@
-const Complaint = require('../models/Complaint');
-const User = require('../models/User');
-const { nanoid } = await import('nanoid');
+import User from '../models/User.js';
+import Complaint from '../models/Complaint.js';
+import { nanoid } from 'nanoid';
 
 const getComplaints = async (req, res) => {
   try {
@@ -87,5 +87,4 @@ const updateComplaint = async (req, res) => {
   }
 };
 
-
-module.exports = { getComplaints, registerComplaint, updateComplaint };
+export { getComplaints, registerComplaint, updateComplaint };

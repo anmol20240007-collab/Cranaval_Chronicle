@@ -1,10 +1,10 @@
-const express = require('express');
-const { Parser } = require('json2csv');
-const PDFDocument = require('pdfkit');
+import express from 'express';
+import { Parser } from 'json2csv';
+import PDFDocument from 'pdfkit';
+import Complaint from '../models/Complaint.js';
 
 const router = express.Router();
 
-const Complaint = require('../models/Complaint');
 
 router.get('/complaints/csv', async (req, res) => {
   try {
@@ -53,4 +53,4 @@ router.get('/complaints/pdf',  async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

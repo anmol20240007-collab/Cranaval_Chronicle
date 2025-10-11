@@ -1,24 +1,34 @@
-const path = require('path');
-const express = require('express');
+import path from 'path';
+import express from 'express';
 const router = express.Router();
-const mongoose = require('mongoose');
-const cors = require('cors');
-require('dotenv').config(); 
+import mongoose from 'mongoose';
+import cors from 'cors';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv'; 
+dotenv.config();
 
-const { registerAdmin, loginAdmin } = require('./router/admin');
-const { register, userLogin, staffLogin} = require('./router/auth');
-const { userPortal,staffPortal } = require('./router/portals');
-const { getComplaints, registerComplaint, updateComplaint } = require('./router/complaints');
-const { staffPending, staffApprove } = require('./router/staff');
-const upload = require('./middleware/upload');
-const exportRoutes = require('./router/complaintData');
+import { registerAdmin, loginAdmin } from './router/admin.js';
+import { register, userLogin, staffLogin } from './router/auth.js';
+import { userPortal, staffPortal } from './router/portals.js';
+import { getComplaints, registerComplaint, updateComplaint } from './router/complaints.js';
+import { staffPending, staffApprove } from './router/staff.js';
+import upload from './middleware/upload.js';
+import exportRoutes from './router/complaintData.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+const MONGO_URI = process.env.MONGO_URI;
+if (!MONGO_URI) {
+  throw new Error('MONGODB_URI environment variable not set');
+}
 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(MONGO_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('MongoDB connection error:', err));
 
@@ -57,4 +67,4 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // ✅ Export the app for Vercel
-module.exports = app;
+export default app;

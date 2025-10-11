@@ -1,4 +1,5 @@
-const User = require('../models/User');
+import User from '../models/User.js';  
+
 
 const staffPending = async (req, res) => {
     try {
@@ -23,4 +24,4 @@ const staffApprove = async (req, res) => {
     }
 }
 
-module.exports = { staffPending, staffApprove };
+export { staffPending, staffApprove };

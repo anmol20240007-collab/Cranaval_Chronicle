@@ -1,5 +1,5 @@
-const User = require('../models/User');
-const Complaint = require('../models/Complaint');
+import User from '../models/User.js';
+import Complaint from '../models/Complaint.js';
 
 const userPortal = async (req, res) => {
   try {
@@ -32,4 +32,4 @@ const staffPortal = async (req, res) => {
   }
 }
 
-module.exports = { userPortal, staffPortal };
+export { userPortal, staffPortal };
