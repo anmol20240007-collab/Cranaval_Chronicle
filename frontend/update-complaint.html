@@ -214,7 +214,7 @@
         }
 
         try {
-            const res = await fetch('/api/complaints/update-status', {
+            const res = await fetch('https://cranaval-chronicle.vercel.app/api/complaints/update-status', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: complaintId, status: status, email: staffEmail })
