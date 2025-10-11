@@ -225,7 +225,7 @@
   const email = localStorage.getItem('email');
   async function fetchComplaints() {
     try {
-      const res = await fetch('/api/complaints/all');
+      const res = await fetch('https://cranaval-chronicle.vercel.app/api/complaints/all');
       if (!res.ok) throw new Error('Failed to fetch complaints');
       return await res.json();
     } catch (err) {
@@ -293,7 +293,7 @@
     }
 
     try {
-      const res = await fetch('/api/staffportal', {
+      const res = await fetch('https://cranaval-chronicle.vercel.app/api/staffportal', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ email })
