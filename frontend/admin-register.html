@@ -136,7 +136,7 @@
             const payload = { requesterEmail, requesterPassword, newAdminEmail, newAdminPassword };
 
             try {
-                const res = await fetch('/api/admin/register', {
+                const res = await fetch('https://cranaval-chronicle.vercel.app/api/admin/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
