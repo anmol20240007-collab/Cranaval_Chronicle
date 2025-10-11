@@ -132,7 +132,7 @@
 
         async function fetchPendingStaff() {
             try {
-                const res = await fetch('/api/staff/pending');
+                const res = await fetch('https://cranaval-chronicle.vercel.app/api/staff/pending');
                 if (!res.ok) throw new Error('Failed to fetch');
                 const j = await res.json();
                 renderPendingStaff(j.pending || []);
@@ -206,7 +206,7 @@
 
         document.getElementById('exportCSVBtn').addEventListener('click', async () => {
             try {
-               const response = await fetch('/api/export/complaints/csv', { method: 'GET' });
+               const response = await fetch('https://cranaval-chronicle.vercel.app/api/export/complaints/csv', { method: 'GET' });
                 if (!response.ok) throw new Error('Failed to download CSV');
                 const blob = await response.blob();
                 const url = window.URL.createObjectURL(blob);
@@ -224,7 +224,7 @@
 
         document.getElementById('exportPDFBtn').addEventListener('click', async () => {
             try {
-                const response = await fetch('/api/export/complaints/pdf', { method: 'GET' });
+                const response = await fetch('https://cranaval-chronicle.vercel.app/api/export/complaints/pdf', { method: 'GET' });
                 if (!response.ok) throw new Error('Failed to download PDF');
                 const blob = await response.blob();
                 const url = window.URL.createObjectURL(blob);
