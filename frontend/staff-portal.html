@@ -265,7 +265,7 @@
       card.className = 'card';
       card.innerHTML = `
         <div class="card-header">
-          <div><span class="cid">${escapeHtml(c.id)}</span> &nbsp; <small style="color:#666">${escapeHtml(c.location || '')} • ${escapeHtml(c.type || '')}</small></div>
+          <div><span class="cid">${escapeHtml(c.id)}</span> &nbsp; <small style="color:#666">${escapeHtml(c.location || '')} • ${escapeHtml(c.urgency || '')}</small></div>
           <div><span class="status status-${c.status}">${c.status.charAt(0).toUpperCase() + c.status.slice(1)}</span></div>
         </div>
         <div class="meta"><strong>${escapeHtml(c.name)}</strong> • ${escapeHtml(c.email)}</div>

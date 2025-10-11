@@ -1,18 +1,13 @@
 import multer from 'multer';
-import fs from 'fs' ;
+import fs from 'fs';
 import path from 'path';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const uploadFolder = '/tmp/uploads';  // Use writable /tmp directory
 
-const uploadFolder = path.join(__dirname, 'uploads');
-
+// Create uploads folder if it doesn't exist (recursive for safety)
 if (!fs.existsSync(uploadFolder)) {
-  fs.mkdirSync(uploadFolder);
+  fs.mkdirSync(uploadFolder, { recursive: true });
 }
-
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadFolder),
